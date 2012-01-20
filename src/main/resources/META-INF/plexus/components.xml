@@ -1,0 +1,26 @@
+<component-set>
+  <components>
+
+  <!--
+    A custom lifecycle for qooxdoo packaging
+    -->
+    <component>
+      <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
+      <role-hint>qooxdoo</role-hint>
+      <implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
+      <configuration>
+        <lifecycles>
+          <lifecycle>
+            <id>default</id>
+            <phases>
+              <initialize>org.qooxdoo:qooxdoo-maven-plugin:sdk-unpack</initialize>
+              <process-resources>org.qooxdoo:qooxdoo-maven-plugin:resources</process-resources>
+              <compile>org.qooxdoo:qooxdoo-maven-plugin:compile</compile>
+            </phases>
+          </lifecycle>
+        </lifecycles>
+      </configuration>
+    </component>
+
+  </components>
+</component-set>

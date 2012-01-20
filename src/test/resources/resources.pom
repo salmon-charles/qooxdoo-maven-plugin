@@ -1,0 +1,28 @@
+<project>
+  <build>
+    <plugins>
+      <plugin>
+   		<groupId>org.qooxdoo</groupId>
+  		<artifactId>qooxdoo-maven-plugin</artifactId>
+        <configuration>
+        	<namespace>resources_app</namespace>
+        	<sourcesDirectory>src/main/qooxdoo</sourcesDirectory>
+        	<resourcesDirectory>src/test/resources</resourcesDirectory>
+        	<outputDirectory>target/test-target/qooxdoo</outputDirectory>
+        	<cacheDirectory>target/test-target/qooxdoo/cache</cacheDirectory>
+        	<translationDirectory>src/test/resources/translation</translationDirectory>
+        	<encoding>UTF-8</encoding>
+        	<sdkParentDirectory>target/test-target</sdkParentDirectory>
+        	<sdkVersion>1.5</sdkVersion>
+        	<config>config.json</config>
+        	<project >
+              <artifactId>test</artifactId>
+              <groupId>org.qooxdoo.test</groupId>
+              <version>0.0.1</version>
+            </project>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+

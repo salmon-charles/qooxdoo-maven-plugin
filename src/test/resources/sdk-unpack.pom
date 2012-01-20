@@ -1,0 +1,24 @@
+<project>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.qooxdoo</groupId>
+				<artifactId>qooxdoo-maven-plugin</artifactId>
+				<configuration>
+					<project implementation="org.charless.qxmaven.mojo.qooxdoo.stub.MavenProjectStub">
+						<artifactId>test</artifactId>
+              			<groupId>org.qooxdoo.test</groupId>
+              			<version>0.0.1</version>
+					</project>
+					<namespace>test</namespace>
+					<sdkVersion>1.5</sdkVersion>
+					<sdkParentDirectory>target/test-target</sdkParentDirectory>
+					<encoding>UTF-8</encoding>
+					
+				</configuration>
+
+			</plugin>
+		</plugins>
+	</build>
+</project>
+
