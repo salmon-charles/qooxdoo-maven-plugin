@@ -1,12 +1,7 @@
 package org.charless.qxmaven.mojo.qooxdoo;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.qooxdoo.charless.build.QxEmbeddedJython;
 
 /**
  * Goal which builds the qooxdoo application

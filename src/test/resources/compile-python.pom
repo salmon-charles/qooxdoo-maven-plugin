@@ -1,0 +1,27 @@
+<project>
+  <build>
+    <plugins>
+      <plugin>
+   		<groupId>org.qooxdoo</groupId>
+  		<artifactId>qooxdoo-maven-plugin</artifactId>
+        <configuration>
+        	<outputDirectory>target/test-target/qooxdoo</outputDirectory>
+        	<namespace>compile_app</namespace>
+        	<encoding>UTF-8</encoding>
+        	<sdkParentDirectory>target/test-compile</sdkParentDirectory>
+        	<sdkVersion>1.5</sdkVersion>
+        	<config>config.json</config>
+        	<useEmbeddedJython>false</useEmbeddedJython>
+        	<pythonInterpreter>python</pythonInterpreter>
+        	<buildJob>build</buildJob>
+        	<project >
+              <artifactId>test</artifactId>
+              <groupId>org.qooxdoo.test</groupId>
+              <version>0.0.1</version>
+            </project>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+

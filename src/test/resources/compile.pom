@@ -11,6 +11,8 @@
         	<sdkParentDirectory>target/test-compile</sdkParentDirectory>
         	<sdkVersion>1.5</sdkVersion>
         	<config>config.json</config>
+        	<useEmbeddedJython>true</useEmbeddedJython>
+        	<buildJob>build</buildJob>
         	<project >
               <artifactId>test</artifactId>
               <groupId>org.qooxdoo.test</groupId>

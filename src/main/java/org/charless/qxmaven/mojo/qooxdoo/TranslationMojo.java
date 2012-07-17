@@ -9,15 +9,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.qooxdoo.charless.build.QxEmbeddedJython;
 
 /**
- * Goal which builds the qooxdoo application
- * 
- * A build contains all the necessaries javascript dependencies and the application sources,
- * generally compacted into a single file
- * 
- * Qooxdoo supports two types of build:
- *  - The development one, that works directly on the application sources, useful to develop your application
- *  (no need to recompile the application on every changes) 
- *  - The production one, that create an optimized javascript file, or multiple ones by using packages
+ * Goal which builds the translation files
  * 
  * @goal translation
  * @phase compile
