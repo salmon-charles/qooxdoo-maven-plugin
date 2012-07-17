@@ -56,7 +56,7 @@ public class ResourcesMojo extends AbstractQooxdooMojo {
     /**
      * Path to the directory containing translation files
      * @parameter   expression="${qooxdoo.application.cacheDirectory}"
-     * 				default-value="${project.basedir}/src/main/resources/translation"
+     * 				default-value="${project.basedir}/src/main/resources/qooxdoo/translation"
      * @required
      */
     protected File translationDirectory;

@@ -198,7 +198,7 @@
     <dependency>
     <groupId>org.qooxdoo</groupId>
     <artifactId>qooxdoo-build-tool</artifactId>
-    <version>1.4-alpha</version>
+    <version>1.4</version>
 	</dependency>
  
   </dependencies>

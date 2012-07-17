@@ -19,25 +19,18 @@ import org.qooxdoo.charless.build.QxEmbeddedJython;
  *  (no need to recompile the application on every changes) 
  *  - The production one, that create an optimized javascript file, or multiple ones by using packages
  * 
- * @goal build
+ * @goal translation
  * @phase compile
  * @author charless
  * @requiresDependencyResolution compile
  */
-public class CompileMojo extends AbstractGeneratorMojo {
-	
-    /**
-     * Name of the job used to build the application.
-     *
-     * @parameter expression="${qooxdoo.build.job}"
-     * 			  default-value="build"
-     */
-    protected String buildJob;
+// FIXME: Which phase for translation ? Do we need to tie it to a phase ?
+public class TranslationMojo extends AbstractGeneratorMojo {
 	
     public void execute()
         throws MojoExecutionException
     {
-    	this.generator(buildJob);
+    	this.generator("translation");
     }
 
 }
