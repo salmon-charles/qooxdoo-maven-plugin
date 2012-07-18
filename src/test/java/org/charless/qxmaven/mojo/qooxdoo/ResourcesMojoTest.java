@@ -26,16 +26,16 @@ public class ResourcesMojoTest extends AbstractMojoTestCase
         // Test the filtering for config.json
         Config cfg = Config.read(mojo.getConfigTarget());
         assertEquals("resources_app",cfg.getApplication());
-        assertEquals(mojo.outputDirectory.getAbsolutePath(),cfg.getRoot());
-        assertEquals(mojo.cacheDirectory.getAbsolutePath(),cfg.getCache());
-        assertEquals(new File(getBasedir(), "target/test-target/qooxdoo-sdk").getAbsolutePath(),cfg.getQooxdooPath());
+        assertEquals("..",cfg.getRoot());
+        assertEquals("../cache",cfg.getCache());
+        assertEquals("../../qooxdoo-sdk",cfg.getQooxdooPath());
         // Test the filtering for Manifest.json
         Manifest m = Manifest.read(new File(mojo.getApplicationTarget(),"Manifest.json"));
         assertEquals("resources_app",m.getNamespace());
         assertEquals("UTF-8",m.getEncoding());
-        assertEquals(new File(getBasedir(), "src/main/qooxdoo").getAbsolutePath(),m.getKlass());
-        assertEquals(new File(getBasedir(), "src/test/resources").getAbsolutePath(),m.getResource());
-        assertEquals(new File(getBasedir(), "src/test/resources/translation").getAbsolutePath(),m.getTranslation());
+        assertEquals("../../../../src/main/qooxdoo",m.getKlass());
+        assertEquals("../../../../src/test/resources",m.getResource());
+        assertEquals("../../../../src/test/resources/translation",m.getTranslation());
         assertEquals("[1.5]",m.info("qooxdoo-versions").toString());
     }
 }
