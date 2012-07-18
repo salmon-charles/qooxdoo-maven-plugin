@@ -12,7 +12,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.shared.filtering.MavenFilteringException;
 import org.apache.maven.shared.filtering.MavenResourcesExecution;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
-import org.charless.qxmaven.mojo.qooxdoo.utils.RessourceUtils;
+import org.charless.qxmaven.mojo.qooxdoo.utils.ResourceUtils;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -97,8 +97,9 @@ public class ResourcesMojo extends AbstractQooxdooMojo {
    
    /**
     * Some properties, referring to paths, needs to be relativize before being wrote to config files. 
+    * WARNING: the value of the following properties must contains path to directory (not to a file) 
     */
-   private static String[] propsToRelativize = {
+   private static String[] propsDirectoryToRelativize = {
 	   "qooxdoo.sdk.parentDirectory",
 	   "qooxdoo.application.resourcesDirectory",
 	   "qooxdoo.application.sourcesDirectory",
@@ -158,11 +159,11 @@ public class ResourcesMojo extends AbstractQooxdooMojo {
     	if (relativize) {
     		File target = this.getApplicationTarget();
     		getLog().info("The following path properties will be relativized to the application target '"+target.getAbsolutePath()+"':");
-    		for (String prop : propsToRelativize) {
+    		for (String prop : propsDirectoryToRelativize) {
     			File path = new File((String)this.project.getProperties().get(prop));
     			try {
-    				String relPath = RessourceUtils.getRelativePath(path.getAbsolutePath(),target.getAbsolutePath(),"/");
-    				getLog().info("+ "+prop+": "+relPath);
+    				String relPath = ResourceUtils.getRelativePath(path.getAbsolutePath(),target.getAbsolutePath(),"/",false);
+    				getLog().info("+ "+prop+": "+path.getAbsolutePath()+" => "+relPath);
     				this.project.getProperties().put(prop,relPath);
     			} catch (Exception e) {
     				getLog().error("+ "+prop+": "+"Can not relativize path '"+path+"' :"+e.getMessage());

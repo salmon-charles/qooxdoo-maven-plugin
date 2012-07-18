@@ -9,7 +9,7 @@ import org.charless.qxmaven.mojo.qooxdoo.utils.TestUtils;
 
 public class CompileMojoTest extends AbstractMojoTestCase
 {
-	static boolean skip_jython = false;
+	static boolean skip_jython = true;
 	static boolean skip_python = true;
 	
     public void testCompileJython()

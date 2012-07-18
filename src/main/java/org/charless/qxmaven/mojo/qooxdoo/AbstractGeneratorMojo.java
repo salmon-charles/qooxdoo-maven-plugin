@@ -136,8 +136,6 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
 		try {
 	    	DefaultExecutor executor = new DefaultExecutor();
 	 	    executor.setExitValue(0);
-	 	    ExecuteWatchdog watchdog = new ExecuteWatchdog(60000);
-	 	    executor.setWatchdog(watchdog);
 	    	executor.execute(cmdLine);
 		} catch (Exception e) {
 			throw new MojoExecutionException(e.getMessage(),e );

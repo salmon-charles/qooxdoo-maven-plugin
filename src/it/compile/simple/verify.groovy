@@ -1,7 +1,3 @@
 
-assert new File( basedir, "target/scripts/Hello.js" ).exists();
-assert new File( basedir, "target/scripts/numbers/One.js" ).exists();
-assert new File( basedir, "target/scripts/numbers/Two.js" ).exists();
-assert new File( basedir, "target/scripts/wait.gif" ).exists();
-
+assert new File( basedir, "target/qooxdoo/test/build/script/test.js" ).exists();
 return true;
