@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.shared.filtering.MavenFilteringException;
 import org.apache.maven.shared.filtering.MavenResourcesExecution;
 import org.apache.maven.shared.filtering.MavenResourcesFiltering;
+import org.charless.qxmaven.mojo.qooxdoo.utils.RessourceUtils;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -92,7 +94,18 @@ public class ResourcesMojo extends AbstractQooxdooMojo {
     * @required
     */
    protected MavenResourcesFiltering mavenResourcesFiltering;
-
+   
+   /**
+    * Some properties, referring to paths, needs to be relativize before being wrote to config files. 
+    */
+   private static String[] propsToRelativize = {
+	   "qooxdoo.sdk.parentDirectory",
+	   "qooxdoo.application.resourcesDirectory",
+	   "qooxdoo.application.sourcesDirectory",
+	   "qooxdoo.application.outputDirectory",
+	   "qooxdoo.application.cacheDirectory",
+	   "qooxdoo.application.translationDirectory"
+	};
     
     public void execute() throws MojoExecutionException {
 		try {
@@ -116,8 +129,9 @@ public class ResourcesMojo extends AbstractQooxdooMojo {
 			mavenResourcesExecution.setIncludeEmptyDirs(false);
 			mavenResourcesExecution.setSupportMultiLineFiltering(false);
 			
-			this.setProperties();
+			this.setProperties(true);
 			this.mavenResourcesFiltering.filterResources(mavenResourcesExecution);
+			this.setProperties(false);
 
 			//executeUserFilterComponents(mavenResourcesExecution);
 		} catch (final MavenFilteringException e) {
@@ -127,8 +141,10 @@ public class ResourcesMojo extends AbstractQooxdooMojo {
     
     /**
      * Make sure the required project properties for filtering are defined
+     * 
+     * @param relativize Some path properties needs to be relativized 
      */
-    protected void setProperties() {
+    protected void setProperties(Boolean relativize) {
     	this.project.getProperties().put("qooxdoo.application.namespace",this.namespace);
     	this.project.getProperties().put("qooxdoo.application.config",this.config);
     	this.project.getProperties().put("qooxdoo.application.resourcesDirectory",this.resourcesDirectory.getAbsolutePath());
@@ -136,9 +152,23 @@ public class ResourcesMojo extends AbstractQooxdooMojo {
     	this.project.getProperties().put("qooxdoo.application.outputDirectory",this.outputDirectory.getAbsolutePath());
     	this.project.getProperties().put("qooxdoo.application.cacheDirectory",this.cacheDirectory.getAbsolutePath());
     	this.project.getProperties().put("qooxdoo.application.translationDirectory",this.translationDirectory.getAbsolutePath());
-    	this.project.getProperties().put("qooxdoo.sdk.parentDirectory",this.sdkParentDirectory.getAbsolutePath());
     	this.project.getProperties().put("qooxdoo.sdk.version",this.sdkVersion);
     	this.project.getProperties().put("qooxdoo.build.sourceEncoding",this.encoding);
+        this.project.getProperties().put("qooxdoo.sdk.parentDirectory",this.sdkParentDirectory.getAbsolutePath());
+    	if (relativize) {
+    		File target = this.getApplicationTarget();
+    		getLog().info("The following path properties will be relativized to the application target '"+target.getAbsolutePath()+"':");
+    		for (String prop : propsToRelativize) {
+    			File path = new File((String)this.project.getProperties().get(prop));
+    			try {
+    				String relPath = RessourceUtils.getRelativePath(path.getAbsolutePath(),target.getAbsolutePath(),"/");
+    				getLog().info("+ "+prop+": "+relPath);
+    				this.project.getProperties().put(prop,relPath);
+    			} catch (Exception e) {
+    				getLog().error("+ "+prop+": "+"Can not relativize path '"+path+"' :"+e.getMessage());
+    			}
+    		}
+    	}
     }
     
     /**
@@ -148,8 +178,8 @@ public class ResourcesMojo extends AbstractQooxdooMojo {
      */
     protected List<Resource> getQxResources() throws MojoExecutionException {
     	List<Resource> qxResources = new ArrayList<Resource>();
-    	// Config
     	File resourcesDir = new File(this.resourcesDirectory,this.namespace);
+    	// Config
     	File configDir = new File(resourcesDir,"config");
     	if (! configDir.isDirectory()) {
     		throw new MojoExecutionException("Qooxdoo configuration directory \'"+configDir.getAbsolutePath()+"\' does not exists or is not a directory !");
@@ -170,5 +200,4 @@ public class ResourcesMojo extends AbstractQooxdooMojo {
     	return qxResources;
     }
     
-
 }

@@ -125,7 +125,7 @@ public abstract class AbstractQooxdooMojo
     
     /**
      * Get the path to the application target
-     * @return Path to the apllication target
+     * @return Path to the application target
      */
     public File getApplicationTarget() {
     	if (this.applicationTarget == null) {

@@ -1,83 +1,49 @@
 {
-  "name"    : "${qooxdoo.application.name}",
+	"name"    : "${qooxdoo.application.name}",
 
-  "include" :
-  [
-    {
-      "path" : "${QOOXDOO_PATH}/tool/data/config/application.json"
-    }
-  ],
+	"include" :
+		[
+		 {
+			 "path" : "${QOOXDOO_PATH}/tool/data/config/application.json"
+		 }
+		 ],
 
-  "export" :
-  [
-    "api",
-    "api-data",
-    "build",
-    "clean",
-    "distclean",
-    "fix",
-    "info",
-    "inspector",
-    "lint",
-    "migration",
-    "pretty",
-    "profiling",
-    "source",
-    "source-all",
-    "source-hybrid",
-    "simulation-build",
-    "simulation-run",
-    "test",
-    "test-source",
-    "translation"
-  ],
-  
-  "default-job" : "source",
+		 "export" :
+			 [
+			  "api",
+			  "api-data",
+			  "build",
+			  "clean",
+			  "distclean",
+			  "fix",
+			  "info",
+			  "inspector",
+			  "lint",
+			  "migration",
+			  "pretty",
+			  "profiling",
+			  "source",
+			  "source-all",
+			  "source-hybrid",
+			  "simulation-build",
+			  "simulation-run",
+			  "test",
+			  "test-source",
+			  "translation"
+			  ],
 
-  "let" :
-  {
-    "APPLICATION"  : "${qooxdoo.application.namespace}",
-    "QOOXDOO_PATH" : "${qooxdoo.sdk.parentDirectory}/qooxdoo-sdk",
-    "QXTHEME"      : "${APPLICATION}.theme.Theme",
-    "API_EXCLUDE"  : ["qx.test.*", "${APPLICATION}.theme.*", "${APPLICATION}.test.*", "${APPLICATION}.simulation.*"],
-    "LOCALES"      : [ "en" ],
-    "CACHE"        : "${qooxdoo.application.cacheDirectory}",
-    "ROOT"         : "${qooxdoo.application.outputDirectory}"
-  }
+			  "default-job" : "source",
 
-  // You only need to edit the remainder of this file, if you want to customize
-  // specific jobs, or add own job definitions.
+			  "let" :
+			  {
+				  "APPLICATION"  : "${qooxdoo.application.namespace}",
+				  "QOOXDOO_PATH" : "${qooxdoo.sdk.parentDirectory}/qooxdoo-sdk",
+				  "QXTHEME"      : "${APPLICATION}.theme.Theme",
 
-  /*
-  ,"jobs" :
-  {
-    // Uncomment the following entry to add a contrib or library to your
-    // project; make sure to adapt the path to the Manifest.json; if you are
-    // using a contrib: library, it will be downloaded into the path specified
-    // by the 'cache/downloads' config key
-    "libraries" : 
-    {
-      "library" :
-      [
-        {
-          "manifest" : "contrib://SkeletonApplication/trunk/Manifest.json"
-        }
-      ]
-    },
+				  "API_EXCLUDE"  : ["qx.test.*", "${APPLICATION}.theme.*", "${APPLICATION}.test.*", "${APPLICATION}.simulation.*"],
+				  "LOCALES"      : [ "en" ],
 
-    // If you want to tweak a job setting, see the following sample where
-    // the "format" feature of the "build-script" job is overridden.
-    // To see a list of available jobs, invoke 'generate.py x'.
-    "build-script" :
-    {
-      "compile-options" : 
-      {
-        "code" :
-        {
-          "format" : false
-        }
-      }
-    }
-  }
-  */
+				  "CACHE"        : "${qooxdoo.application.cacheDirectory}",
+				  "ROOT"         : "${qooxdoo.application.outputDirectory}"
+			  }
 }
