@@ -7,13 +7,13 @@ import org.apache.maven.plugin.testing.AbstractMojoTestCase;
 import org.qooxdoo.charless.build.config.Config;
 import org.qooxdoo.charless.build.config.Manifest;
 
-public class ResourcesMojoTest extends AbstractMojoTestCase
+public class GenerateConfigMojoTest extends AbstractMojoTestCase
 {
     public void testConfig()
         throws Exception
     {
-        File testPom = new File( getBasedir(), "src/test/resources/resources.pom" );
-        ResourcesMojo mojo = (ResourcesMojo) lookupMojo( "resources", testPom );
+        File testPom = new File( getBasedir(), "src/test/resources/generate-config.pom" );
+        GenerateConfigMojo mojo = (GenerateConfigMojo) lookupMojo( "generate-config", testPom );
         assertNotNull( "Failed to configure the plugin", mojo );
 
         

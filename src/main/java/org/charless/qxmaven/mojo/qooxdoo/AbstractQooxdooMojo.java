@@ -83,8 +83,7 @@ public abstract class AbstractQooxdooMojo
      * @required
      */
     protected String config;
-
-
+    
     /**
      * Map of plugin artifacts.
      * 

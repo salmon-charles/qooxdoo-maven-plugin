@@ -19,7 +19,7 @@
     <pluginExecution>
       <pluginExecutionFilter>
         <goals>
-          <goal>build</goal>
+          <goal>compile</goal>
         </goals>
       </pluginExecutionFilter>
       <action>
@@ -32,7 +32,20 @@
     <pluginExecution>
       <pluginExecutionFilter>
         <goals>
-          <goal>resources</goal>
+          <goal>generate-config</goal>
+        </goals>
+      </pluginExecutionFilter>
+      <action>
+        <ignore />
+      </action>
+    </pluginExecution>
+  </pluginExecutions>
+  
+  <pluginExecutions>
+    <pluginExecution>
+      <pluginExecutionFilter>
+        <goals>
+          <goal>generate-html</goal>
         </goals>
       </pluginExecutionFilter>
       <action>

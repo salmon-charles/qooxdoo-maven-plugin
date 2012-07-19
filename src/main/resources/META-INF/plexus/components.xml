@@ -14,8 +14,9 @@
             <id>default</id>
             <phases>
               <initialize>org.qooxdoo:qooxdoo-maven-plugin:sdk-unpack</initialize>
-              <process-resources>org.qooxdoo:qooxdoo-maven-plugin:resources</process-resources>
-              <compile>org.qooxdoo:qooxdoo-maven-plugin:build</compile>
+              <generate-sources>org.qooxdoo:qooxdoo-maven-plugin:generate-config</generate-sources>
+              <process-resources>org.qooxdoo:qooxdoo-maven-plugin:generate-html</process-resources>
+              <compile>org.qooxdoo:qooxdoo-maven-plugin:compile</compile>
             </phases>
           </lifecycle>
         </lifecycles>

@@ -67,7 +67,7 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
 	   	// Launch job
     	File config = new File(this.getApplicationTarget(),this.config);
 	    if (useEmbeddedJython) {
-	    	getLog().info("Starting qooxdoo job '"+jobName+"' using build-in Jython interpreter...");
+	    	getLog().info("Starting '"+jobName+"' job using build-in Jython interpreter...");
 	    	String[] options = new String[] {
 	    			"--config",config.getAbsolutePath(),jobName
 	    	};
@@ -78,7 +78,7 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
 	    	getLog().debug("Command line: '"+command+"'");
 	    	jythonGenerator(options, qooxdooSdkPath);  
 	    } else {
-	    	getLog().info("Starting qooxdoo job '"+jobName+"' using external Python interpreter...");
+	    	getLog().info("Starting '"+jobName+"' job using external Python interpreter...");
 	    	Map<String,Object> map = new HashMap<String,Object>();
 		    map.put("config", config);
 		    map.put("job", jobName);

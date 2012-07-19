@@ -14,7 +14,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  *  (no need to recompile the application on every changes) 
  *  - The production one, that create an optimized javascript file, or multiple ones by using packages
  * 
- * @goal build
+ * @goal compile
  * @phase compile
  * @author charless
  * @requiresDependencyResolution compile
@@ -32,6 +32,7 @@ public class CompileMojo extends AbstractGeneratorMojo {
     public void execute()
         throws MojoExecutionException
     {
+    	
     	this.generator(buildJob);
     }
 

@@ -17,7 +17,7 @@ public class CompileMojoTest extends AbstractMojoTestCase
     {
     	if (! skip_jython) {
     		File testPom = new File( getBasedir(), "src/test/resources/compile.pom" );
-            CompileMojo mojo =  (CompileMojo)lookupMojo( "build", testPom );
+            CompileMojo mojo =  (CompileMojo)lookupMojo( "compile", testPom );
             assertNotNull( "Failed to configure the plugin", mojo );
             
             // Unpack sdk
