@@ -163,10 +163,10 @@ public class ResourcesMojo extends AbstractQooxdooMojo {
     			File path = new File((String)this.project.getProperties().get(prop));
     			try {
     				String relPath = ResourceUtils.getRelativePath(path.getAbsolutePath(),target.getAbsolutePath(),"/",false);
-    				getLog().info("+ "+prop+": "+path.getAbsolutePath()+" => "+relPath);
+    				getLog().info("  - "+prop+": "+path.getAbsolutePath()+" => "+relPath);
     				this.project.getProperties().put(prop,relPath);
     			} catch (Exception e) {
-    				getLog().error("+ "+prop+": "+"Can not relativize path '"+path+"' :"+e.getMessage());
+    				getLog().error("  - "+prop+": "+"Can not relativize path '"+path+"' :"+e.getMessage());
     			}
     		}
     	}

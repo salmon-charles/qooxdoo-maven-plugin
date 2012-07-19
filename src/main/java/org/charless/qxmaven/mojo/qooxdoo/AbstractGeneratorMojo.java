@@ -67,28 +67,28 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
 	   	// Launch job
     	File config = new File(this.getApplicationTarget(),this.config);
 	    if (useEmbeddedJython) {
-	    	getLog().info("Using build-in Jython interpreter");
+	    	getLog().info("Starting qooxdoo job '"+jobName+"' using build-in Jython interpreter...");
 	    	String[] options = new String[] {
-	    			"--config",config.getAbsolutePath(),"build"
+	    			"--config",config.getAbsolutePath(),jobName
 	    	};
 	    	String command = "[JYTHON]";
 	    	for (String o: options) {
 	    		command += " "+o;
 	    	}
-	    	getLog().info("Starting '"+command+"'");
+	    	getLog().debug("Command line: '"+command+"'");
 	    	jythonGenerator(options, qooxdooSdkPath);  
 	    } else {
+	    	getLog().info("Starting qooxdoo job '"+jobName+"' using external Python interpreter...");
 	    	Map<String,Object> map = new HashMap<String,Object>();
 		    map.put("config", config);
 		    map.put("job", jobName);
-	    	getLog().info("Using python interpreter '"+pythonInterpreter+"'");
 	    	CommandLine cmdLine = new CommandLine(pythonInterpreter);
 	    	cmdLine.addArgument(pythonScript.getAbsolutePath());
 	    	cmdLine.addArgument("--config");
 		    cmdLine.addArgument("${config}");
 		    cmdLine.addArgument("${job}");
 		    cmdLine.setSubstitutionMap(map);
-		    getLog().info("Starting '"+cmdLine.toString()+"'");
+		    getLog().debug("Command line: '"+cmdLine.toString()+"'");
 		    pythonGenerator(cmdLine, qooxdooSdkPath); 
 	    }
     }
@@ -110,7 +110,6 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
         long passedTimeInSeconds = TimeUnit.SECONDS.convert(System.currentTimeMillis() - starts, TimeUnit.MILLISECONDS);
         getLog().info("Jython initialized in "+passedTimeInSeconds+" seconds");
         starts = System.currentTimeMillis();
-		getLog().info("Starting qooxdoo build...");
 		try {
 			qx.run(SCRIPT_NAME,options);
 		} catch (Exception e) {
@@ -132,7 +131,6 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
     {
 	    // Start job
 		long starts = System.currentTimeMillis();
-		getLog().info("Starting qooxdoo build...");
 		try {
 	    	DefaultExecutor executor = new DefaultExecutor();
 	 	    executor.setExitValue(0);
