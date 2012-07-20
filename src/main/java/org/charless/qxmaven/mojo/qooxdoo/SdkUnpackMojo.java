@@ -47,6 +47,14 @@ public class SdkUnpackMojo extends AbstractQooxdooMojo {
     	if (qooxdooSdk == null) {
     		getLog().warn("Could not find qooxdoo.org:qooxdoo-sdk dependency ! Make sure to download and unpack the sdk into the 'sdkDirectory'." );
     	} else {
+    		File sdkDir = new File(this.sdkParentDirectory, QOOXDOO_SDK_DIRECTORY);
+    		getLog().info( "Cleaning qooxdoo-sdk directory '" + sdkDir.getAbsolutePath() + "'" );
+    		try {
+    			FileUtils.cleanDirectory(sdkDir);
+    		} catch (Exception e) {
+    			getLog().warn("Could not clean qooxdoo-sdk directory:"+e.getMessage());
+    		}
+    		
            getLog().info( "Unpacking qooxdoo-sdk dependency [" + qooxdooSdk.toString() + "]" );
            File jarFile = qooxdooSdk.getFile();
            try
