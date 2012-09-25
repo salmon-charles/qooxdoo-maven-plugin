@@ -15,8 +15,10 @@
             <phases>
               <initialize>org.qooxdoo:qooxdoo-maven-plugin:sdk-unpack</initialize>
               <generate-sources>org.qooxdoo:qooxdoo-maven-plugin:generate-config</generate-sources>
+              <generate-resources>org.qooxdoo:qooxdoo-maven-plugin:translation</generate-resources>
               <process-resources>org.qooxdoo:qooxdoo-maven-plugin:generate-html</process-resources>
               <compile>org.qooxdoo:qooxdoo-maven-plugin:compile</compile>
+              <test-compile>org.qooxdoo:qooxdoo-maven-plugin:test-compile</test-compile>
             </phases>
           </lifecycle>
         </lifecycles>

@@ -9,12 +9,11 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.qooxdoo.charless.build.QxEmbeddedJython;
 
 /**
- * Goal which builds the translation files
+ * Goal which (re)builds the translation files
  * 
  * @goal translation
- * @phase compile
+ * @phase generate-resources
  * @author charless
- * @requiresDependencyResolution compile
  */
 // FIXME: Which phase for translation ? Do we need to tie it to a phase ?
 public class TranslationMojo extends AbstractGeneratorMojo {

@@ -29,7 +29,7 @@ import org.codehaus.plexus.util.StringUtils;
  */
 public class GenerateConfigMojo extends AbstractResourcesMojo {
    /**
-    * Some properties, referring to paths, needs to be relativize before being wrote to config files. 
+    * Some properties, referring to paths, need to be relativized before being wrote into config files. 
     * WARNING: the value of the following properties must contains path to directory (not to a file) 
     */
    private static String[] propsDirectoryToRelativize = {

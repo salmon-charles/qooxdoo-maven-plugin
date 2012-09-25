@@ -2,14 +2,25 @@ package org.charless.qxmaven.mojo.qooxdoo;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.charless.qxmaven.mojo.qooxdoo.jython.JythonShell;
 import org.qooxdoo.charless.build.QxEmbeddedJython;
+
+import com.google.common.base.Throwables;
+import com.google.common.collect.Sets;
 
 /**
  * An abstract class that inherits from AbstractQooxdooMojo,
@@ -24,6 +35,34 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
 	
 	private final static String SCRIPT_NAME="generator.py";
 	
+    /**
+     * Used to look up Artifacts in the remote repository.
+     * 
+     * @parameter expression=
+     *  "${component.org.apache.maven.artifact.resolver.ArtifactResolver}"
+     * @required
+     * @readonly
+     */
+    protected ArtifactResolver artifactResolver;
+    
+    /**
+     * List of Remote Repositories used by the resolver
+     * 
+     * @parameter expression="${project.remoteArtifactRepositories}"
+     * @readonly
+     * @required
+     */
+    protected List remoteRepositories;
+
+    /**
+     * Location of the local repository.
+     * 
+     * @parameter expression="${localRepository}"
+     * @readonly
+     * @required
+     */
+    protected ArtifactRepository localRepository;
+    
     /**
      * Name of the python interpreter or full path to it
      *
@@ -42,6 +81,22 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
      * @required
      */
     protected Boolean useEmbeddedJython;
+    
+    /**
+     * Where the compiled code is
+     *
+     * @parameter expression="${qooxdoo.jython.compile.directory}" default-value="${project.build.directory}/classes"
+     * @optional
+     */
+    protected File jythonCompiledDirectory;
+
+    /**
+     * Where the test compiled code is
+     *
+     * @parameter expression="${qooxdoo.jython.test.compile.directory}" default-value="${project.build.directory}/test-classes"
+     * @optional
+     */
+    protected File jythonTestCompiledDirectory;
 	
 	/**
 	 * Launch a job using the Qooxdoo python generator
@@ -53,7 +108,7 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
     {
     	// Check 
     	File qooxdooSdkPath = getSdkDirectory();
-    	File pythonScript = QxEmbeddedJython.resolvePythonScriptPath(qooxdooSdkPath,SCRIPT_NAME);
+    	File pythonScript = resolvePythonScriptPath(SCRIPT_NAME);
 		// Check script existence
 		if (! pythonScript.exists() || ! pythonScript.canRead()) {
 			getLog().error(
@@ -76,7 +131,7 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
 	    		command += " "+o;
 	    	}
 	    	getLog().debug("Command line: '"+command+"'");
-	    	jythonGenerator(options, qooxdooSdkPath);  
+	    	jythonGenerator(jobName);  
 	    } else {
 	    	getLog().info("Starting '"+jobName+"' job using external Python interpreter...");
 	    	Map<String,Object> map = new HashMap<String,Object>();
@@ -101,22 +156,31 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
 	 * 
 	 * @throws MojoExecutionException
 	 */
-    private void jythonGenerator(String[] options, File qooxdooSdkPath) throws MojoExecutionException
+    private void jythonGenerator(String jobName) throws MojoExecutionException
     {
     	// Start job
-		long starts = System.currentTimeMillis();
-		getLog().info("Initializing Jython...");
-		QxEmbeddedJython qx = new QxEmbeddedJython(qooxdooSdkPath);
-        long passedTimeInSeconds = TimeUnit.SECONDS.convert(System.currentTimeMillis() - starts, TimeUnit.MILLISECONDS);
-        getLog().info("Jython initialized in "+passedTimeInSeconds+" seconds");
-        starts = System.currentTimeMillis();
-		try {
-			qx.run(SCRIPT_NAME,options);
-		} catch (Exception e) {
-			throw new MojoExecutionException(e.getMessage(),e );
-		}
-        passedTimeInSeconds = TimeUnit.SECONDS.convert(System.currentTimeMillis() - starts, TimeUnit.MILLISECONDS);
-        getLog().info("DONE in "+passedTimeInSeconds+" seconds");
+//		long starts = System.currentTimeMillis();
+//		getLog().info("Initializing Jython...");
+//		QxEmbeddedJython qx = new QxEmbeddedJython(qooxdooSdkPath);
+//        long passedTimeInSeconds = TimeUnit.SECONDS.convert(System.currentTimeMillis() - starts, TimeUnit.MILLISECONDS);
+//        getLog().info("Jython initialized in "+passedTimeInSeconds+" seconds");
+//        starts = System.currentTimeMillis();
+//		try {
+//			qx.run(SCRIPT_NAME,options);
+//		
+//		} catch (Exception e) {
+//			throw new MojoExecutionException(e.getMessage(),e );
+//		}
+//        passedTimeInSeconds = TimeUnit.SECONDS.convert(System.currentTimeMillis() - starts, TimeUnit.MILLISECONDS);
+//        getLog().info("DONE in "+passedTimeInSeconds+" seconds");
+    	
+    	long starts = System.currentTimeMillis();
+    	getLog().info("Starting Jython, please wait...");
+        JythonShell shell = getJythonShell(jobName,true);
+    	shell.execFile(resolvePythonScriptPath(SCRIPT_NAME).getAbsolutePath());
+    	long passedTimeInSeconds = TimeUnit.SECONDS.convert(System.currentTimeMillis() - starts, TimeUnit.MILLISECONDS);
+    	getLog().info("DONE in "+passedTimeInSeconds+" seconds");
+    	
     }
     
 	/**
@@ -142,5 +206,56 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
 	    getLog().info("DONE in "+passedTimeInSeconds+" seconds");
 	     
     }
+    
+    /**
+     * Build the paths to the jython dependencies: compile and test-compile directories, qooxdoo toolchain
+     * and optionally all the paths to the project dependencies 
+     * @param includeArtifactsDependencies Add the project dependencies to the python classpath
+     * @return A set of dependencies
+     */
+    protected Set<String> getJythonClasspath(Boolean includeArtifactsDependencies) {
+        Set<Artifact> artifacts = project.getDependencyArtifacts();
+        Set<Artifact> transitiveArtifacts = Sets.newHashSet();
+
+        Set<String> paths = Sets.newHashSet();
+        paths.add(jythonCompiledDirectory.getAbsolutePath());
+        paths.add(jythonTestCompiledDirectory.getAbsolutePath());
+        if (includeArtifactsDependencies) {
+	        for(Artifact artifact : artifacts) {
+	          try {
+	            artifactResolver.resolve(artifact, this.remoteRepositories, this.localRepository);
+	            paths.add(artifact.getFile().getAbsolutePath());
+	            ArtifactResolutionResult results = artifactResolver.resolveTransitively(artifacts, artifact, localRepository, remoteRepositories, null, null);
+	            transitiveArtifacts.addAll(results.getArtifacts());
+	          } catch (Exception e) {
+	            Throwables.propagate(e);
+	          }
+	        }
+	        for(Artifact artifact : transitiveArtifacts) {
+	        	paths.add(artifact.getFile().getAbsolutePath());
+	        }
+        }
+        
+        paths.add(new File(getSdkDirectory(),"tool"+File.separator+"pylib").getPath());
+        paths.add(new File(getSdkDirectory(),"tool"+File.separator+"bin").getPath());
+        
+        return paths;
+      }
+    
+	public  File resolvePythonScriptPath(String pythonScriptName) {
+		return new File(getSdkDirectory(),"tool"+File.separator+"bin"+File.separator+pythonScriptName);
+	}
+	
+	public JythonShell getJythonShell( String jobName, Boolean includeArtifactsDependencies) {
+		Properties properties = new Properties();
+        properties.putAll(System.getProperties());
+        properties.putAll(getPluginContext());
+		JythonShell shell = new JythonShell(properties, getJythonClasspath(true),
+    			new String[] {"generator.py","-c",getConfigTarget().getPath(),jobName});
+    	// Bug fix: The gc.disable method throw an exception in the Jython implementation
+		shell.exec("import gc");
+    	shell.exec("gc.disable=gc.enable");
+    	return shell;
+	}
     
 }
