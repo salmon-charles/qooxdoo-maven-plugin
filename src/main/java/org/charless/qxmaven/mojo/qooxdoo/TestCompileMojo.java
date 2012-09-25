@@ -16,8 +16,8 @@ public class TestCompileMojo extends AbstractGeneratorMojo {
     /**
      * Name of the job used to build the application.
      *
-     * @parameter expression="${qooxdoo.build.job}"
-     * 			  default-value="build"
+     * @parameter expression="${qooxdoo.test.job}"
+     * 			  default-value="test"
      */
     protected String buildJob;
 	
