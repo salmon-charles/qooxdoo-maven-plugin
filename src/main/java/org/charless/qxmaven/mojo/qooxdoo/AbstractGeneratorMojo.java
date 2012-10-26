@@ -123,9 +123,14 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
     	File config = new File(this.getApplicationTarget(),this.config);
 	    if (useEmbeddedJython) {
 	    	getLog().info("Starting '"+jobName+"' job using build-in Jython interpreter...");
-	    	String[] options = new String[] {
-	    			"--config",config.getAbsolutePath(),jobName
-	    	};
+	    	String[] options = new String[this.getCommandLineOptions().length+3];
+	    	options[0] = "--config";
+	    	options[1] = config.getAbsolutePath();
+	    	options[2] = jobName;
+	    	int i = 3;
+	    	for (String o: this.getCommandLineOptions()) {
+	    		options[i++] = o;
+	    	}
 	    	String command = "[JYTHON]";
 	    	for (String o: options) {
 	    		command += " "+o;
@@ -142,6 +147,9 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
 	    	cmdLine.addArgument("--config");
 		    cmdLine.addArgument("${config}");
 		    cmdLine.addArgument("${job}");
+		    for (String o: this.getCommandLineOptions()) {
+		    	cmdLine.addArgument(o);
+	    	}
 		    cmdLine.setSubstitutionMap(map);
 		    getLog().debug("Command line: '"+cmdLine.toString()+"'");
 		    pythonGenerator(cmdLine, qooxdooSdkPath); 
@@ -158,22 +166,6 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
 	 */
     private void jythonGenerator(String jobName) throws MojoExecutionException
     {
-    	// Start job
-//		long starts = System.currentTimeMillis();
-//		getLog().info("Initializing Jython...");
-//		QxEmbeddedJython qx = new QxEmbeddedJython(qooxdooSdkPath);
-//        long passedTimeInSeconds = TimeUnit.SECONDS.convert(System.currentTimeMillis() - starts, TimeUnit.MILLISECONDS);
-//        getLog().info("Jython initialized in "+passedTimeInSeconds+" seconds");
-//        starts = System.currentTimeMillis();
-//		try {
-//			qx.run(SCRIPT_NAME,options);
-//		
-//		} catch (Exception e) {
-//			throw new MojoExecutionException(e.getMessage(),e );
-//		}
-//        passedTimeInSeconds = TimeUnit.SECONDS.convert(System.currentTimeMillis() - starts, TimeUnit.MILLISECONDS);
-//        getLog().info("DONE in "+passedTimeInSeconds+" seconds");
-    	
     	long starts = System.currentTimeMillis();
     	getLog().info("Starting Jython, please wait...");
         JythonShell shell = getJythonShell(jobName,true);
@@ -184,7 +176,7 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
     }
     
 	/**
-	 * Launch a job using the Qooxdoo python generator, with the Jython interpreter
+	 * Launch a job using the Qooxdoo python generator, with the external python interpreter
 	 * 
 	 * @param cmdLine 			Command line
 	 * @param qooxdooSdkPath 	Path to the qooxdoo sdk
@@ -193,7 +185,6 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
 	 */
     private void pythonGenerator(CommandLine cmdLine, File qooxdooSdkPath) throws MojoExecutionException
     {
-	    // Start job
 		long starts = System.currentTimeMillis();
 		try {
 	    	DefaultExecutor executor = new DefaultExecutor();
@@ -205,6 +196,15 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
 	    long passedTimeInSeconds = TimeUnit.SECONDS.convert(System.currentTimeMillis() - starts, TimeUnit.MILLISECONDS);
 	    getLog().info("DONE in "+passedTimeInSeconds+" seconds");
 	     
+    }
+    
+    /**
+     * Return optional additional command line options
+     * Dont specify the "--config" options which is automatically set when running the job  
+     * @return
+     */
+    protected String[] getCommandLineOptions() {
+    	return new String[0];
     }
     
     /**
@@ -251,7 +251,7 @@ public abstract class AbstractGeneratorMojo extends AbstractQooxdooMojo {
         properties.putAll(System.getProperties());
         properties.putAll(getPluginContext());
 		JythonShell shell = new JythonShell(properties, getJythonClasspath(true),
-    			new String[] {"generator.py","-c",getConfigTarget().getPath(),jobName});
+				new String[] {"generator.py","-c",getConfigTarget().getPath(),jobName});
     	// Bug fix: The gc.disable method throw an exception in the Jython implementation
 		shell.exec("import gc");
     	shell.exec("gc.disable=gc.enable");
