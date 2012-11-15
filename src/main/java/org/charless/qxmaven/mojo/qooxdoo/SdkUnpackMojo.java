@@ -48,13 +48,14 @@ public class SdkUnpackMojo extends AbstractQooxdooMojo {
     		getLog().warn("Could not find qooxdoo.org:qooxdoo-sdk dependency ! Make sure to download and unpack the sdk into the 'sdkDirectory'." );
     	} else {
     		File sdkDir = new File(this.sdkParentDirectory, QOOXDOO_SDK_DIRECTORY);
-    		getLog().info( "Cleaning qooxdoo-sdk directory '" + sdkDir.getAbsolutePath() + "'" );
-    		try {
-    			FileUtils.cleanDirectory(sdkDir);
-    		} catch (Exception e) {
-    			getLog().warn("Could not clean qooxdoo-sdk directory:"+e.getMessage());
+    		if (sdkDir.exists()) {
+    			getLog().info( "Cleaning qooxdoo-sdk directory '" + sdkDir.getAbsolutePath() + "'" );
+        		try {
+        			FileUtils.cleanDirectory(sdkDir);
+        		} catch (Exception e) {
+        			getLog().warn("Could not clean qooxdoo-sdk directory:"+e.getMessage());
+        		}
     		}
-    		
            getLog().info( "Unpacking qooxdoo-sdk dependency [" + qooxdooSdk.toString() + "]" );
            File jarFile = qooxdooSdk.getFile();
            try
@@ -137,7 +138,7 @@ public class SdkUnpackMojo extends AbstractQooxdooMojo {
     			String version = FileUtils.fileRead(versionFile, this.encoding);
     			version = (version == null ? "null" : version);
     			if (this.sdkVersion.equals(version)) { return true;}
-    			getLog().warn("The version of the sdk ("+version+") does not match with the required version ("+this.sdkVersion+"): check the file \'"+versionFile.getAbsolutePath()+"\'");
+    			getLog().warn("The version of the sdk ("+version+") does not match with the required version ("+this.sdkVersion+")");
     		} catch(Exception e) {
     			getLog().warn("Could not read sdk version file: "+e.getMessage());
     		}

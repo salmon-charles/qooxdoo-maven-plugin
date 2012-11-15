@@ -3,13 +3,13 @@ package org.charless.qxmaven.mojo.qooxdoo;
 
 import java.io.File;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.openqa.selenium.By;
+import org.json.JSONObject;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 /**
@@ -45,35 +45,87 @@ public class TestCompileMojo extends TestrunnerMojo {
     	startSelenium(index);
     }
     
-    public void startSelenium(URL index) {
+    public void startSelenium(URL index) throws MojoExecutionException {
     	getLog().info("Starting Selenium FireFox driver on "+index.toString());
         // Create a new instance of the driver
         WebDriver driver = new FirefoxDriver();
         // And now use this to load the testrunner
         driver.get(index.toString());
-        // FIXME: how to know when the tests have been loaded ?Timeout
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        WebElement element;
-        for (int i=0;i<50;i++) {
-        	element = driver.findElement(By.id("info"));
-        	getLog().info(i+":"+element.getText());
-        	try {
-        		Thread.sleep(50);
-        	} catch (Exception e) {};
-        	
-        }
-       
-        
-        
-        // Results
+        // Wait for tests being executed
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        Object response = js.executeScript("return qx.core.Init.getApplication().runner.view.getFailedResults();");
-        if (response != null) {
-        	getLog().debug(response.toString());
+        boolean stop = false;
+        int i = 0; 
+        HashMap<String,JSONObject> tests = new HashMap<String,JSONObject>();
+        String status = ""; // init,loading, ready, running, finished, aborted, error
+        int nbTestsPending = -1;
+        while(! stop) {
+        	Object response = js.executeScript("return qx.core.Init.getApplication().runner.view.getTestSuiteState();");
+            if (response != null) {
+            	String oldStatus = status;
+            	status = response.toString().toLowerCase();
+            	if (! oldStatus.equals(status)) {
+            		if ("running".equals(status)) {
+            			getLog().info("Running tests...");
+                	} 
+            	}
+            	if ("running".equals(status)) {
+            		response = js.executeScript("return qx.core.Init.getApplication().runner.view.getTestCount();");
+                	if (response != null) {
+                		try {
+                			if (Integer.parseInt(response.toString()) > nbTestsPending ) {
+                				nbTestsPending = Integer.parseInt(response.toString());
+                				if (nbTestsPending > 0) {
+                					getLog().info(nbTestsPending+" tests pending.");
+                				}
+                			}
+                		} catch (Exception e) {
+                			getLog().warn(e);
+                		}	
+                	}
+            	}
+            	if("finished".equals(status) ||
+            			"aborted".equals(status) ||
+            			"error".equals(status)) 
+            	{
+            		stop = true;
+            	}
+            } else {
+            	i++;
+            }
+            try {
+            	Thread.sleep(250);
+            } catch (Exception e) {}
+            if (i > 10) { stop = true;}  // 10*250 = 2500ms timeout
         }
-        
+ 
+        // Get Report
+        Object response = js.executeScript("return qx.core.Init.getApplication().runner.view.getTestResults();");
+    	String report = null;
+        if (response != null) {
+    		try {
+    			report = response.toString();
+    		} catch (Exception e) {
+    			getLog().warn(e);
+    		}	
+    	}
+    	
         //Close the browser
         driver.quit();
+        
+        // Final reporting
+        // TODO: parse report as json data, do a real reporting
+        if (report==null) {
+        	getLog().error("Could not get report !");
+        	throw new MojoExecutionException("Could not get report !");
+        } else {
+        	if (report.matches(".*state=failure, messages.*")) {
+        		getLog().error("Unit tests failure !");
+        		throw new MojoExecutionException("Unit tests failure !");
+        	}
+        }
+       
+        getLog().info("ALL TESTS SUCCESSFULL !");
+        
     }
     
     public File getTestrunnerIndexHtml() {
