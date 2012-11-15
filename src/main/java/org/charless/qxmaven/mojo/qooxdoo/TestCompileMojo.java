@@ -3,14 +3,15 @@ package org.charless.qxmaven.mojo.qooxdoo;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.json.JSONObject;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
 /**
  * Goal which builds the qooxdoo testrunner
@@ -22,15 +23,48 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  */
 public class TestCompileMojo extends TestrunnerMojo {
 	
+	private static final Map<String,String> SeleniumWebDrivers;
+	static {
+		Map<String, String> aMap = new HashMap<String,String>();
+        aMap.put("firefox","org.openqa.selenium.firefox.FirefoxDriver");
+        aMap.put("ie","org.openqa.selenium.ie.InternetExplorerDriver");
+        aMap.put("chrome","org.openqa.selenium.chrome.ChromeDriver");
+        SeleniumWebDrivers = Collections.unmodifiableMap(aMap);
+	}
+	
     /**
      * Name of the directory where testrunner will be builded.
      * Strongly encouraged to use a different directory that the default "test" one,
      * as we are using a simplified view for building the testrunner.
      *
-     * @parameter expression="${qooxdoo.test.unitdir}"
+     * @parameter expression="${qooxdoo.test.unit.dir}"
      * 			  default-value="testunit"
      */
-    protected String testUnitdir;
+    protected String testUnitDir;
+    
+    /**
+     * Name of the browser to use for performing unit tests
+     * It must be installed on the machine.
+     * Currently one of: firefox, ie or chrome
+     * 
+     * @parameter expression="${qooxdoo.test.unit.browser}"
+     * 			  default-value="firefox"
+     */
+    protected String testUnitBrowser;
+    
+    /**
+     * Path to the Internet-Explorer binary to use for performing unit tests
+     * 
+     * @parameter expression="${webdriver.ie.driver}"
+     */
+    protected String testUnitIePath;
+    
+    /**
+     * Path to the Chrome binary to use for performing unit tests
+     * 
+     * @parameter expression="${webdriver.chrome.driver}"
+     */
+    protected String testUnitChromePath;
 	
 	
     public void execute() throws MojoExecutionException, MojoFailureException
@@ -63,14 +97,32 @@ public class TestCompileMojo extends TestrunnerMojo {
     protected String[] getCommandLineOptions() {
     	return new String[] {
     			"-m","TESTRUNNER_VIEW:"+this.testView,
-    			"-m","BUILD_PATH:${ROOT}/"+this.testUnitdir
+    			"-m","BUILD_PATH:${ROOT}/"+this.testUnitDir
     	};
     }
     
     public void startSelenium(URL index) throws MojoExecutionException, MojoFailureException {
-    	getLog().info("Starting Selenium FireFox driver on "+index.toString());
+    	// Check driver
+    	String webDriverClass = SeleniumWebDrivers.get(testUnitBrowser.toLowerCase());
+    	if (webDriverClass == null) {
+    		String msg = "The specified browser '"+testUnitBrowser+"' is not supported: use one of";
+    		for (String k : SeleniumWebDrivers.keySet()) {
+    			msg += " '"+k+"'";
+    		}
+    		getLog().error(msg);
+    	}
+    	if (this.testUnitIePath !=null) {System.setProperty("webdriver.ie.driver", this.testUnitIePath);}
+    	if (this.testUnitChromePath!=null) {System.setProperty("webdriver.chrome.driver", this.testUnitChromePath);}
+    	
+    	getLog().info("Starting Selenium driver '"+testUnitBrowser+"' on "+index.toString());
         // Create a new instance of the driver
-        WebDriver driver = new FirefoxDriver();
+    	WebDriver driver;
+    	try  {
+            driver = (WebDriver) Class.forName(webDriverClass).newInstance();
+    	} catch (Exception e) {
+    		getLog().error("Can not create selenium driver instance !");
+    		throw new MojoExecutionException(e.getMessage());
+    	}
         // And now use this to load the testrunner
         driver.get(index.toString());
         // Wait for tests being executed
@@ -151,7 +203,7 @@ public class TestCompileMojo extends TestrunnerMojo {
     }
     
     public File getTestrunnerIndexHtml() {
-    	File basedir = new File(this.getApplicationTarget(),this.testUnitdir);
+    	File basedir = new File(this.getApplicationTarget(),this.testUnitDir);
     	String index = (this.testJob != null ? this.testJob.replaceAll("test", "index") : "index")+".html";
     	return new File(basedir, index);
     }
