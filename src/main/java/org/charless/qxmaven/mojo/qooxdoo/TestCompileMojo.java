@@ -22,6 +22,16 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  */
 public class TestCompileMojo extends TestrunnerMojo {
 	
+    /**
+     * Name of the directory where testrunner will be builded.
+     * Strongly encouraged to use a different directory that the default "test" one,
+     * as we are using a simplified view for building the testrunner.
+     *
+     * @parameter expression="${qooxdoo.test.unitdir}"
+     * 			  default-value="testunit"
+     */
+    protected String testUnitdir;
+	
 	
     public void execute() throws MojoExecutionException, MojoFailureException
     {
@@ -50,7 +60,14 @@ public class TestCompileMojo extends TestrunnerMojo {
   	    }
     }
     
-    public void startSelenium(URL index) throws MojoExecutionException {
+    protected String[] getCommandLineOptions() {
+    	return new String[] {
+    			"-m","TESTRUNNER_VIEW:"+this.testView,
+    			"-m","BUILD_PATH:${ROOT}/"+this.testUnitdir
+    	};
+    }
+    
+    public void startSelenium(URL index) throws MojoExecutionException, MojoFailureException {
     	getLog().info("Starting Selenium FireFox driver on "+index.toString());
         // Create a new instance of the driver
         WebDriver driver = new FirefoxDriver();
@@ -125,7 +142,7 @@ public class TestCompileMojo extends TestrunnerMojo {
         } else {
         	if (report.matches(".*state=failure, messages.*")) {
         		getLog().error("Unit tests failure !");
-        		throw new MojoExecutionException("Unit tests failure !");
+        		throw new MojoFailureException("Unit tests failure !");
         	}
         }
        
@@ -134,7 +151,7 @@ public class TestCompileMojo extends TestrunnerMojo {
     }
     
     public File getTestrunnerIndexHtml() {
-    	File basedir = new File(this.getApplicationTarget(),"test");
+    	File basedir = new File(this.getApplicationTarget(),this.testUnitdir);
     	String index = (this.testJob != null ? this.testJob.replaceAll("test", "index") : "index")+".html";
     	return new File(basedir, index);
     }
