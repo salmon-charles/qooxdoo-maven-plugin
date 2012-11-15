@@ -134,6 +134,12 @@ public abstract class AbstractQooxdooMojo
     }
     
     /**
+     * @parameter 	expression="${skipTests}"
+     * 				default-value="${maven.test.skip}"
+     */
+    protected boolean skipTests;
+    
+    /**
      * Get the path to the configuration file of the application in the target directory
      * @return Path to the target configuration file
      */

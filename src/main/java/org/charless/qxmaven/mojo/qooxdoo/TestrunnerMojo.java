@@ -5,6 +5,7 @@ import java.io.File;
 import java.net.URL;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 
 /**
  * Goal which builds the qooxdoo testrunner
@@ -33,7 +34,7 @@ public class TestrunnerMojo extends AbstractGeneratorMojo {
     protected String testView;
 	
     public void execute()
-        throws MojoExecutionException
+        throws MojoExecutionException, MojoFailureException
     {
     	this.generator(testJob);
     	File index = this.getTestrunnerIndexHtml();
