@@ -53,14 +53,14 @@ public class TestCompileMojo extends TestrunnerMojo {
     protected String testUnitBrowser;
     
     /**
-     * Path to the Internet-Explorer binary to use for performing unit tests
+     * Path to the Internet-Explorer selenium driver to use for performing unit tests
      * 
      * @parameter expression="${webdriver.ie.driver}"
      */
     protected String testUnitIePath;
     
     /**
-     * Path to the Chrome binary to use for performing unit tests
+     * Path to the Chrome selenium driver to use for performing unit tests
      * 
      * @parameter expression="${webdriver.chrome.driver}"
      */
@@ -70,11 +70,11 @@ public class TestCompileMojo extends TestrunnerMojo {
     public void execute() throws MojoExecutionException, MojoFailureException
     {
     	 if(!skipTests) {
-    	      getLog().info("Executing Unit Tests");
-	    	if (! "testrunner.view.Reporter".equals(this.testView)) {
-	    		this.testView = "testrunner.view.Reporter";
-	    		getLog().warn("The testrunner view has been forced to "+this.testView);
-	    	}
+    	    getLog().info("Executing Unit Tests");
+	    	// Use a simple dedicated view for automated unit tests
+	    	this.testView = "testrunner.view.Reporter";
+	    	getLog().info("The testrunner view '"+this.testView+"' will be used for running unit tests");
+	    	// Build the testrunner
 	    	this.generator(testJob);
 	    	URL index = null ;
 	    	if (this.getTestrunnerIndexHtml().exists()) {

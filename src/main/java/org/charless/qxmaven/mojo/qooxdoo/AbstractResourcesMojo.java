@@ -39,6 +39,15 @@ public abstract class AbstractResourcesMojo extends AbstractQooxdooMojo {
     protected File sourcesDirectory;
     
 	/**
+     * Path to the qooxdoo application test directory, containing the application unit-test classes
+     *
+     * @parameter 	expression="${qooxdoo.application.testDirectory}"
+     * 				default-value="${project.basedir}/src/test/qooxdoo"
+     * @required
+     */
+    protected File testDirectory;
+    
+	/**
      * Path to the qooxdoo application resources directory
      *
      * @parameter 	expression="${qooxdoo.application.resourcesDirectory}"
@@ -155,6 +164,7 @@ public abstract class AbstractResourcesMojo extends AbstractQooxdooMojo {
     	this.project.getProperties().put("qooxdoo.application.config",this.config);
     	this.project.getProperties().put("qooxdoo.application.resourcesDirectory",this.resourcesDirectory.getAbsolutePath());
     	this.project.getProperties().put("qooxdoo.application.sourcesDirectory",this.sourcesDirectory.getAbsolutePath());
+    	this.project.getProperties().put("qooxdoo.application.testDirectory",this.testDirectory.getAbsolutePath());
     	this.project.getProperties().put("qooxdoo.application.outputDirectory",this.outputDirectory.getAbsolutePath());
     	this.project.getProperties().put("qooxdoo.application.cacheDirectory",this.cacheDirectory.getAbsolutePath());
     	this.project.getProperties().put("qooxdoo.application.translationDirectory",this.translationDirectory.getAbsolutePath());

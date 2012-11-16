@@ -36,6 +36,7 @@ public class GenerateConfigMojo extends AbstractResourcesMojo {
 	   "qooxdoo.sdk.parentDirectory",
 	   "qooxdoo.application.resourcesDirectory",
 	   "qooxdoo.application.sourcesDirectory",
+	   "qooxdoo.application.testDirectory",
 	   "qooxdoo.application.outputDirectory",
 	   "qooxdoo.application.cacheDirectory",
 	   "qooxdoo.application.translationDirectory"
@@ -97,6 +98,10 @@ public class GenerateConfigMojo extends AbstractResourcesMojo {
     	File configJson = new File(configDir,this.config);
     	if (! configJson.isFile()) {
     		throw new MojoExecutionException("Qooxdoo configuration file \'"+configJson.getAbsolutePath()+"\' does not exists or is not a file !");
+    	}
+    	File unitTestManifestJson = new File(configDir,"UnitTestManifest.json");
+    	if (! unitTestManifestJson.isFile()) {
+    		throw new MojoExecutionException("Qooxdoo unit-test manifest file \'"+unitTestManifestJson.getAbsolutePath()+"\' does not exists or is not a file !");
     	}
     	Resource config = new Resource();
     	config.setFiltering(true);
