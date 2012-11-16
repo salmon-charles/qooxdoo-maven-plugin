@@ -90,7 +90,7 @@ public class TestCompileMojo extends TestrunnerMojo {
 	    	startSelenium(index);
 	    	
   	    } else {
-  	    	getLog().info("Skipping Unit Tests");
+  	    	getLog().warn("Skipping Unit Tests");
   	    }
     }
     
