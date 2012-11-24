@@ -70,7 +70,7 @@ public abstract class AbstractQooxdooMojo
     /**
      * The character encoding scheme to be applied when filtering resources.
      *
-     * @parameter   expression="${qooxdoo.build.sourceEncoding}"
+     * @parameter   expression="${project.build.sourceEncoding}"
      * 				default-value="UTF-8"
      */
     protected String encoding;
