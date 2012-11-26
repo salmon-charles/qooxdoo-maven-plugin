@@ -24,6 +24,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;
 
 /**
+ * EXPERIMENTAL !
  * Launch a jython console, with the qooxdoo toolchain preloaded.
  * Once in the console, you can type actions like build() or jobs("clean","build")
  * to trigger qooxdoo generator jobs.

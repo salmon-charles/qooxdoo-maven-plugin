@@ -1,0 +1,14 @@
+ ------
+ Introduction
+ ------
+ Charles Salmon
+ ------
+ 2012-11-25
+ ------
+
+
+Getting started
+
+  Qooxdoo Maven Plugin is a maven plugin to help people developing Qooxdoo application within Maven.
+  
+  See {{{./plugin-info.html}plugin documentation}} to getting started. 
