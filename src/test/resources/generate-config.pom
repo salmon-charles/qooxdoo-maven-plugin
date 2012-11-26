@@ -7,6 +7,7 @@
         <configuration>
         	<namespace>resources_app</namespace>
         	<sourcesDirectory>src/main/qooxdoo</sourcesDirectory>
+        	<testDirectory>src/main/qooxdoo</testDirectory>
         	<resourcesDirectory>src/test/resources</resourcesDirectory>
         	<outputDirectory>target/test-target/qooxdoo</outputDirectory>
         	<cacheDirectory>target/test-target/qooxdoo/cache</cacheDirectory>

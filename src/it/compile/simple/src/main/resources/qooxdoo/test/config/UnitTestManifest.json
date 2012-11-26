@@ -1,0 +1,34 @@
+{
+  "info" : 
+  {
+    "name" : "${qooxdoo.application.name}_test",
+
+    "summary" : "Unit tests for ${qooxdoo.application.summary}",
+    "description" : "Group unit tests classes in a separated directory than the application one",
+    
+    "homepage" : "http://some.homepage.url/",
+
+    "license" : "SomeLicense",
+    "authors" : 
+    [
+      {
+        "name" : "First Author (uid)",
+        "email" : "first.author@some.domain"
+      }
+    ],
+
+    "version" : "${project.version}",
+    "qooxdoo-versions": ["${qooxdoo.sdk.version}"]
+  },
+  
+  "provides" : 
+  {
+    "namespace"   : "${qooxdoo.application.namespace}.test",
+    "encoding"    : "${qooxdoo.build.sourceEncoding}",
+    "class"       : "${qooxdoo.application.testDirectory}",
+    "resource"    : "${qooxdoo.application.resourcesDirectory}/${qooxdoo.application.namespace}",
+    "translation" : "${qooxdoo.application.translationDirectory}",
+    "type"        : "application"
+  }
+}
+
