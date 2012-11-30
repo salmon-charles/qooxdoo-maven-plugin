@@ -39,26 +39,42 @@
 
 <p>The best way to getting started is to use the <a href="http://salmon-charles.github.com/qooxdoo-archetype-desktop/">qooxdoo-archetype-desktop</a>, which will create a web application with the Qooxdoo build life-cycles mapped to the maven ones.</p>
 
-<h3>From an existing maven project</h3>
+<h3>From scratch</h3>
 
-<p>The simple way is to transform your maven project into a 'qooxdoo' one, by modifying the <code>pom.xml</code> file as follow:</p>
+<p>The simple way is to create a 'qooxdoo' maven project, by creating the <code>pom.xml</code> file as follow:</p>
 
 <div class="highlight"><pre><span class="nt">&lt;project&gt;</span>
+    <span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+    <span class="nt">&lt;groupId&gt;</span>test<span class="nt">&lt;/groupId&gt;</span>
+    <span class="nt">&lt;artifactId&gt;</span>qxapp<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;version&gt;</span>0.0.1-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+    <span class="nt">&lt;packaging&gt;</span>qooxdoo<span class="nt">&lt;/packaging&gt;</span>
 
-  <span class="nt">&lt;packaging&gt;</span>qooxdoo<span class="nt">&lt;/packaging&gt;</span> <span class="c">&lt;!-- ADD THIS LINE --&gt;</span>
+    <span class="nt">&lt;properties&gt;</span>
+        <span class="nt">&lt;qooxdoo.sdk.version&gt;</span>2.0.3<span class="nt">&lt;/qooxdoo.sdk.version&gt;</span>
+    <span class="nt">&lt;/properties&gt;</span>
 
-  <span class="nt">&lt;build&gt;</span>
-    <span class="nt">&lt;plugins&gt;</span>
-      <span class="c">&lt;!-- QOOXDOO PLUGIN --&gt;</span>
-      <span class="nt">&lt;plugin&gt;</span>
-        <span class="nt">&lt;groupId&gt;</span>org.qooxdoo<span class="nt">&lt;/groupId&gt;</span>
-        <span class="nt">&lt;artifactId&gt;</span>qooxdoo-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
-        <span class="nt">&lt;version&gt;</span>2.0-RC1<span class="nt">&lt;/version&gt;</span>
-        <span class="nt">&lt;extensions&gt;</span>true<span class="nt">&lt;/extensions&gt;</span> <span class="c">&lt;!-- IMPORTANT !!! --&gt;</span>
-      <span class="nt">&lt;/plugin&gt;</span>
-    <span class="nt">&lt;/plugins&gt;</span> 
-  <span class="nt">&lt;/build&gt;</span>
+    <span class="nt">&lt;dependencies&gt;</span>
+        <span class="nt">&lt;dependency&gt;</span>
+            <span class="nt">&lt;groupId&gt;</span>org.qooxdoo<span class="nt">&lt;/groupId&gt;</span>
+            <span class="nt">&lt;artifactId&gt;</span>qooxdoo-sdk<span class="nt">&lt;/artifactId&gt;</span>
+            <span class="nt">&lt;version&gt;</span>${qooxdoo.sdk.version}<span class="nt">&lt;/version&gt;</span>
+        <span class="nt">&lt;/dependency&gt;</span>
+    <span class="nt">&lt;/dependencies&gt;</span>
+
+    <span class="nt">&lt;build&gt;</span>
+        <span class="nt">&lt;plugins&gt;</span>
+            <span class="nt">&lt;plugin&gt;</span>
+                <span class="nt">&lt;groupId&gt;</span>org.qooxdoo<span class="nt">&lt;/groupId&gt;</span>
+                <span class="nt">&lt;artifactId&gt;</span>qooxdoo-maven-plugin<span class="nt">&lt;/artifactId&gt;</span>
+                <span class="nt">&lt;version&gt;</span>2.0-RC1<span class="nt">&lt;/version&gt;</span>
+                <span class="nt">&lt;extensions&gt;</span>true<span class="nt">&lt;/extensions&gt;</span>
+            <span class="nt">&lt;/plugin&gt;</span>
+        <span class="nt">&lt;/plugins&gt;</span>
+    <span class="nt">&lt;/build&gt;</span>
+
 <span class="nt">&lt;/project&gt;</span>
+
 </pre></div>
 
 <p>Don't forget the <code>&lt;packaging&gt;qooxdoo&lt;/packaging&gt;</code> AND <code>&lt;extensions&gt;true&lt;/extensions&gt;</code>, they are responsible for mapping the Qooxdoo build life-cycles to the Maven ones.</p>
