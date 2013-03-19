@@ -1,9 +1,13 @@
 package org.charless.qxmaven.mojo.qooxdoo;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -50,14 +54,6 @@ public abstract class AbstractQooxdooMojo
      * @required
      */
     protected File sdkParentDirectory;
-    
-    /**
-     * The qooxdoo sdk version
-     * @parameter   expression="${qooxdoo.sdk.version}"
-     * 				
-     * @required
-     */
-    protected String sdkVersion;
     
     /**
      * Path to the output directory where application will be builded
@@ -158,6 +154,36 @@ public abstract class AbstractQooxdooMojo
 		this.namespace = namespace;
 	}
     
+	public String getSdkVersion() {
+		Artifact qooxdooSdk = this.getQooxdooSdkArtifact();
+		if (qooxdooSdk == null) { return null; }
+		return qooxdooSdk.getVersion();
+	}
+	
+    /**
+     * Get the qooxdoo-sdk dependency
+     */
+    @SuppressWarnings("rawtypes")
+    public Artifact getQooxdooSdkArtifact() {
+        Set dependencies = project.getArtifacts();
+
+		if( dependencies.size() == 0 ) { return null;		}
+
+        ArtifactFilter runtime = new ScopeArtifactFilter( Artifact.SCOPE_COMPILE );
+        for ( Iterator iterator = dependencies.iterator(); iterator.hasNext(); )
+        {
+            Artifact dependency = (Artifact) iterator.next();
+            if ( 	!dependency.isOptional() 
+            		&& "jar".equals( dependency.getType() )
+            		&& "org.qooxdoo".equals(dependency.getGroupId())
+            		&& "qooxdoo-sdk".equals(dependency.getArtifactId())
+            		&& runtime.include( dependency ) )
+            {
+                return dependency;
+            }
+        }
+    	return null;
+    }
 
 //    /**
 //     * @component 

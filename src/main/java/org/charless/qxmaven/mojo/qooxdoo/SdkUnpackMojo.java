@@ -85,34 +85,6 @@ public class SdkUnpackMojo extends AbstractQooxdooMojo {
     }
     
     /**
-     * Get the qooxdoo-sdk dependency
-     */
-    @SuppressWarnings("rawtypes")
-    public Artifact getQooxdooSdkArtifact() {
-        Set dependencies = project.getArtifacts();
-
-		if( dependencies.size() == 0 ) { return null;		}
-
-        ArtifactFilter runtime = new ScopeArtifactFilter( Artifact.SCOPE_COMPILE );
-        for ( Iterator iterator = dependencies.iterator(); iterator.hasNext(); )
-        {
-            Artifact dependency = (Artifact) iterator.next();
-            if ( 	!dependency.isOptional() 
-            		&& "jar".equals( dependency.getType() )
-            		&& "org.qooxdoo".equals(dependency.getGroupId())
-            		&& "qooxdoo-sdk".equals(dependency.getArtifactId())
-            		&& runtime.include( dependency ) )
-            {
-                if (this.sdkVersion.equals(dependency.getVersion())) {
-                	return dependency;
-                }                 	
-                getLog().warn("The version of the "+dependency.toString()+" does not match with the required version ("+this.sdkVersion+"): the dependency will be ignored." );
-            }
-        }
-    	return null;
-    }
-    
-    /**
      * Check that the sdk directory exists and is valid
      * @param verbose Give information if set to true
      * @return True if sdk is correctly installed
@@ -136,9 +108,10 @@ public class SdkUnpackMojo extends AbstractQooxdooMojo {
     	} else {
     		try {
     			String version = FileUtils.fileRead(versionFile, this.encoding);
-    			version = (version == null ? "null" : version);
-    			if (this.sdkVersion.equals(version)) { return true;}
-    			getLog().warn("The version of the sdk ("+version+") does not match with the required version ("+this.sdkVersion+")");
+    			String prjVersion = getSdkVersion()== null ? "null" : getSdkVersion();
+    			version = (version == null ? "null" : version.replaceAll("\\s\n\r", ""));
+    			if (version.equals(prjVersion)) { return true;}
+    			getLog().warn("The version of the sdk ("+version+") does not match with the required version ("+prjVersion+")");
     		} catch(Exception e) {
     			getLog().warn("Could not read sdk version file: "+e.getMessage());
     		}
