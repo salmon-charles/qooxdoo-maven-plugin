@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.qooxdoo.charless.build.QxEmbeddedJython;
 
 /**
@@ -18,10 +19,10 @@ import org.qooxdoo.charless.build.QxEmbeddedJython;
 // FIXME: Which phase for translation ? Do we need to tie it to a phase ?
 public class TranslationMojo extends AbstractGeneratorMojo {
 	
-    public void execute()
-        throws MojoExecutionException
+    public void execute() throws MojoExecutionException, MojoFailureException
     {
-    	this.generator("translation");
+    	this.setJobName("translation");
+    	super.execute();
     }
 
 }

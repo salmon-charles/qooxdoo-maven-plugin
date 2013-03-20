@@ -75,7 +75,8 @@ public class TestCompileMojo extends TestrunnerMojo {
 	    	this.testView = "testrunner.view.Reporter";
 	    	getLog().info("The testrunner view '"+this.testView+"' will be used for running unit tests");
 	    	// Build the testrunner
-	    	this.generator(testJob);
+	    	super.execute();
+	    	
 	    	URL index = null ;
 	    	if (this.getTestrunnerIndexHtml().exists()) {
 	    		try {

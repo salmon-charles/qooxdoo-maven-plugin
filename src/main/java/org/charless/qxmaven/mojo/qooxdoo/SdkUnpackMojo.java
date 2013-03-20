@@ -109,7 +109,7 @@ public class SdkUnpackMojo extends AbstractQooxdooMojo {
     		try {
     			String version = FileUtils.fileRead(versionFile, this.encoding);
     			String prjVersion = getSdkVersion()== null ? "null" : getSdkVersion();
-    			version = (version == null ? "null" : version.replaceAll("\\s\n\r", ""));
+    			version = (version == null ? "null" : version.replaceAll("[\\s\n\r]", ""));
     			if (version.equals(prjVersion)) { return true;}
     			getLog().warn("The version of the sdk ("+version+") does not match with the required version ("+prjVersion+")");
     		} catch(Exception e) {

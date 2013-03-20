@@ -2,6 +2,7 @@ package org.charless.qxmaven.mojo.qooxdoo;
 
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 
 /**
  * Goal which builds the qooxdoo application
@@ -29,11 +30,11 @@ public class CompileMojo extends AbstractGeneratorMojo {
      */
     protected String buildJob;
 	
-    public void execute()
-        throws MojoExecutionException
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException
     {
-    	
-    	this.generator(buildJob);
+    	this.setJobName(buildJob);
+    	super.execute();
     }
 
 }
