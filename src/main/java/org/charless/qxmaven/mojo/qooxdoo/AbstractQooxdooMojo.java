@@ -28,6 +28,49 @@ public abstract class AbstractQooxdooMojo
 	final static protected String QOOXDOO_SDK_DIRECTORY = "qooxdoo-sdk";
 	
 	/**
+     * Path to the qooxdoo application source directory, containing the application classes
+     *
+     * @parameter 	expression="${qooxdoo.application.sourcesDirectory}"
+     * 				default-value="${project.basedir}/src/main/qooxdoo"
+     * @required
+     */
+    protected File sourcesDirectory;
+    
+	/**
+     * Path to the qooxdoo application test directory, containing the application unit-test classes
+     *
+     * @parameter 	expression="${qooxdoo.application.testDirectory}"
+     * 				default-value="${project.basedir}/src/test/qooxdoo"
+     * @required
+     */
+    protected File testDirectory;
+    
+	/**
+     * Path to the qooxdoo application resources directory
+     *
+     * @parameter 	expression="${qooxdoo.application.resourcesDirectory}"
+     * 				default-value="${project.basedir}/src/main/resources/qooxdoo"
+     * @required
+     */
+    protected File resourcesDirectory;
+    
+    /**
+     * Path to the output cache directory where the cache informations will be stored
+     * @parameter   expression="${qooxdoo.application.cacheDirectory}"
+     * 				default-value="${project.build.directory}/qooxdoo/cache"
+     * @required
+     */
+    protected File cacheDirectory;
+    
+    /**
+     * Path to the directory containing translation files
+     * @parameter   expression="${qooxdoo.application.translationDirectory}"
+     * 				default-value="${project.basedir}/src/main/resources/qooxdoo/translation"
+     * @required
+     */
+    protected File translationDirectory;
+    
+	/**
      * The maven project.
      *
      * @parameter expression="${project}"
@@ -144,6 +187,15 @@ public abstract class AbstractQooxdooMojo
     		this.configTarget = new File(this.getApplicationTarget(),this.config);
     	}
     	return this.configTarget;
+    }
+    
+    public File getConfigDirectory() {
+    	File resourcesDir = new File(this.resourcesDirectory,this.namespace);
+    	return new File(resourcesDir,"config");
+    }
+    
+    public File getConfigJson() {
+    	return new File(getConfigDirectory(),this.config);
     }
 
 	public String getNamespace() {
