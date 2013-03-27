@@ -3,15 +3,25 @@ package org.charless.qxmaven.mojo.qooxdoo;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.charless.qxmaven.mojo.qooxdoo.app.Config;
+import org.charless.qxmaven.mojo.qooxdoo.json.Json;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONObject;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 
 /**
  * Goal which builds the qooxdoo testrunner
@@ -26,9 +36,12 @@ public class TestCompileMojo extends TestrunnerMojo {
 	private static final Map<String,String> SeleniumWebDrivers;
 	static {
 		Map<String, String> aMap = new HashMap<String,String>();
+		aMap.put("htmlunit","org.openqa.selenium.htmlunit.HtmlUnitDriver");
         aMap.put("firefox","org.openqa.selenium.firefox.FirefoxDriver");
         aMap.put("ie","org.openqa.selenium.ie.InternetExplorerDriver");
         aMap.put("chrome","org.openqa.selenium.chrome.ChromeDriver");
+        aMap.put("safari","org.openqa.selenium.safari.SafariDriver");
+        aMap.put("phantomjs","org.openqa.selenium.phantomjs.PhantomJSDriver");
         SeleniumWebDrivers = Collections.unmodifiableMap(aMap);
 	}
 	
@@ -45,10 +58,10 @@ public class TestCompileMojo extends TestrunnerMojo {
     /**
      * Name of the browser to use for performing unit tests
      * It must be installed on the machine.
-     * Currently one of: firefox, ie or chrome
+     * Currently one of: phantomjs, firefox, ie, chrome, safari, htmlunit
      * 
      * @parameter expression="${qooxdoo.test.unit.browser}"
-     * 			  default-value="firefox"
+     * 			  default-value="phantomjs"
      */
     protected String testUnitBrowser;
     
@@ -65,6 +78,13 @@ public class TestCompileMojo extends TestrunnerMojo {
      * @parameter expression="${webdriver.chrome.driver}"
      */
     protected String testUnitChromePath;
+    
+    /**
+     * Path to the phantomjs binary to use for performing unit tests
+     * 
+     * @parameter expression="${webdriver.phantomjs.driver}"
+     */
+    protected String testUnitPhantomjsPath;
 	
 	
     public void execute() throws MojoExecutionException, MojoFailureException
@@ -114,13 +134,25 @@ public class TestCompileMojo extends TestrunnerMojo {
     	}
     	if (this.testUnitIePath !=null) {System.setProperty("webdriver.ie.driver", this.testUnitIePath);}
     	if (this.testUnitChromePath!=null) {System.setProperty("webdriver.chrome.driver", this.testUnitChromePath);}
+    	if (this.testUnitPhantomjsPath!=null) {System.setProperty("phantomjs.binary.path", this.testUnitPhantomjsPath);}
     	
     	getLog().info("Starting Selenium driver '"+testUnitBrowser+"' on "+index.toString());
         // Create a new instance of the driver
     	WebDriver driver;
+    	
     	try  {
-            driver = (WebDriver) Class.forName(webDriverClass).newInstance();
-    	} catch (Exception e) {
+    		if ("htmlunit".equals(testUnitBrowser.toLowerCase())) {
+    			driver = new HtmlUnitDriver(BrowserVersion.CHROME_16);
+    			((HtmlUnitDriver)driver).setJavascriptEnabled(true);
+    		} else if ("phantomjs".equals(testUnitBrowser.toLowerCase())) {
+    			DesiredCapabilities cap = DesiredCapabilities.phantomjs();
+    			driver = new PhantomJSDriver(cap);
+    		}
+    		else {
+    			driver = (WebDriver) Class.forName(webDriverClass).newInstance();
+    		}
+    	} 
+    	catch (Exception e) {
     		getLog().error("Can not create selenium driver instance !");
     		throw new MojoExecutionException(e.getMessage());
     	}
@@ -174,31 +206,34 @@ public class TestCompileMojo extends TestrunnerMojo {
         }
  
         // Get Report
-        Object response = js.executeScript("return qx.core.Init.getApplication().runner.view.getTestResults();");
-    	String report = null;
-        if (response != null) {
-    		try {
-    			report = response.toString();
-    		} catch (Exception e) {
-    			getLog().warn(e);
-    		}	
-    	}
+        Map<String, Map<String,Object>> response = (Map<String, Map<String,Object>>)js.executeScript("return qx.core.Init.getApplication().runner.view.getTestResults();");
     	
         //Close the browser
         driver.quit();
         
         // Final reporting
         // TODO: parse report as json data, do a real reporting
-        if (report==null) {
+        int failed = 0;
+        if (response==null) {
         	getLog().error("Could not get report !");
         	throw new MojoExecutionException("Could not get report !");
         } else {
-        	if (report.matches(".*state=failure, messages.*")) {
-        		getLog().error("Unit tests failure !");
-        		throw new MojoFailureException("Unit tests failure !");
-        	}
+    		for (String key: response.keySet() ) {
+    			String state = response.get(key).get("state").toString();
+    			String msg = key+": "+state;
+    			if (! state.toLowerCase().equals("success")) {
+    				failed++;
+    				Object messages = response.get(key).get("messages");
+    				if (messages != null) msg+="\n"+messages.toString().replaceAll("<br/>", "\n").replaceAll("<br>", "\n");
+    				getLog().error(msg);
+    			} else {
+    				getLog().info(msg);
+    			}
+    		}
         }
-       
+        if (failed > 0) {
+        	 throw new MojoFailureException("FAILED "+failed+" UNIT TEST(s) !");
+        }
         getLog().info("ALL TESTS SUCCESSFULL !");
         
     }

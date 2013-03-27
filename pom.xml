@@ -18,6 +18,7 @@
 		<mavenVersion>2.2.1</mavenVersion>
 		<mavenArchiverVersion>2.2</mavenArchiverVersion>
 		<mavenFilteringVersion>1.0</mavenFilteringVersion>
+		<seleniumWebDrivers>2.31.0</seleniumWebDrivers>
 	</properties>
 
 	<scm>
@@ -225,21 +226,39 @@
 			<artifactId>guava</artifactId>
 			<version>11.0.1</version>
 		</dependency>
+		
+		<!-- Selenium -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-firefox-driver</artifactId>
-			<version>2.26.0</version>
+			<version>${seleniumWebDrivers}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-ie-driver</artifactId>
-			<version>2.26.0</version>
+			<version>${seleniumWebDrivers}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-chrome-driver</artifactId>
-			<version>2.26.0</version>
+			<version>${seleniumWebDrivers}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-htmlunit-driver</artifactId>
+			<version>${seleniumWebDrivers}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-safari-driver</artifactId>
+			<version>${seleniumWebDrivers}</version>
+		</dependency>
+		<dependency>
+	        <groupId>com.github.detro.ghostdriver</groupId>
+	        <artifactId>phantomjsdriver</artifactId>
+	        <version>1.0.3</version>
+	    </dependency>  
+	    
 		
 		<!-- JSON -->
 		 <dependency>

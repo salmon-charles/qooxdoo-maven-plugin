@@ -29,9 +29,7 @@ public class Manifest {
 	 */
 	public static Manifest read(File jsonConfig) throws Exception {
 		ObjectMapper mapper = Json.getMapper();
-		mapper.configure(JsonParser.Feature.ALLOW_COMMENTS,true);
 		Manifest m = mapper.readValue(jsonConfig, Manifest.class);
-		mapper.configure(JsonParser.Feature.ALLOW_COMMENTS,false);
 		return m;
 	}
 	

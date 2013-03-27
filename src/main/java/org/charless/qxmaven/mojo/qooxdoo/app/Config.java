@@ -41,9 +41,7 @@ public class Config {
 	 */
 	public static Config read(File jsonConfig) throws Exception {
 		ObjectMapper mapper = Json.getMapper();
-		mapper.configure(JsonParser.Feature.ALLOW_COMMENTS,true);
 		Config cfg = mapper.readValue(jsonConfig, Config.class);
-		mapper.configure(JsonParser.Feature.ALLOW_COMMENTS,false);
 		return cfg;
 	}
 	

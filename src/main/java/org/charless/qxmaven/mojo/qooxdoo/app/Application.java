@@ -165,6 +165,11 @@ public class Application {
     	this.manifest.write( new File(targetConfig,this.getManifestFileName()));
     	// manifest for unit tests
     	Manifest unitTestManifest = this.manifest.copy();
+    	unitTestManifest.infoPut("name", "${qooxdoo.application.name}_test");
+    	unitTestManifest.infoPut("summary","Unit tests for ${qooxdoo.application.summary");
+    	unitTestManifest.infoPut("description", "Group unit tests classes in a separated directory than the application one");
+    	unitTestManifest.providesPut("namespace", "${qooxdoo.application.namespace}.test");
+    	unitTestManifest.providesPut("class", "${qooxdoo.application.testDirectory}");
     	unitTestManifest.write( new File(targetConfig,unitTestManifestFilename));
     }
     
