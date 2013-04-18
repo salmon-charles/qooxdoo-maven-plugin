@@ -20,7 +20,6 @@ import org.apache.maven.shared.filtering.MavenResourcesFiltering;
 import org.charless.qxmaven.mojo.qooxdoo.utils.ResourceUtils;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
-import org.qooxdoo.charless.build.QxEmbeddedJython;
 
 /**
  * An abstract class that inherits from AbstractQooxdooMojo,

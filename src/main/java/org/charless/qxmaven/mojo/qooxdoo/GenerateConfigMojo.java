@@ -66,13 +66,13 @@ public class GenerateConfigMojo extends AbstractResourcesMojo {
     		File target = this.getApplicationTarget();
     		getLog().info("The following path properties will be relativized to the application target '"+target.getAbsolutePath()+"':");
     		for (String prop : propsDirectoryToRelativize) {
-    			File path = new File((String)this.project.getProperties().get(prop));
     			try {
+        			File path = new File((String)this.project.getProperties().get(prop));
     				String relPath = ResourceUtils.getRelativePath(path.getAbsolutePath(),target.getAbsolutePath(),"/",false);
     				getLog().info("  - "+prop+": "+path.getAbsolutePath()+" => "+relPath);
     				this.project.getProperties().put(prop,relPath);
     			} catch (Exception e) {
-    				getLog().error("  - "+prop+": "+"Can not relativize path '"+path+"' :"+e.getMessage());
+    				getLog().error("  - "+prop+": "+"Can not relativize path '"+this.project.getProperties().get(prop)+"' :"+e.getMessage());
     			}
     		}
     	}

@@ -7,9 +7,6 @@ import java.io.FileOutputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.charless.qxmaven.mojo.qooxdoo.app.Application;
-import org.python.apache.xerces.parsers.DOMParser;
-import org.python.apache.xml.serialize.OutputFormat;
-import org.python.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
 
 /**

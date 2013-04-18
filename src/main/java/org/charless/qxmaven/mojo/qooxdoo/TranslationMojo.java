@@ -11,7 +11,6 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.charless.qxmaven.mojo.qooxdoo.app.Config;
-import org.qooxdoo.charless.build.QxEmbeddedJython;
 
 /**
  * Goal which (re)builds the translation files

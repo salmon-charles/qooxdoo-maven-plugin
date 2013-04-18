@@ -18,7 +18,6 @@ import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.charless.qxmaven.mojo.qooxdoo.jython.JythonShell;
-import org.qooxdoo.charless.build.QxEmbeddedJython;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.Sets;

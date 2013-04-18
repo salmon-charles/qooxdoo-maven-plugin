@@ -14,13 +14,12 @@
         	<translationDirectory>src/test/resources/translation</translationDirectory>
         	<encoding>UTF-8</encoding>
         	<sdkParentDirectory>target/test-target</sdkParentDirectory>
-        	<sdkVersion>1.5</sdkVersion>
         	<config>config.json</config>
-        	<project >
-              <artifactId>test</artifactId>
-              <groupId>org.qooxdoo.test</groupId>
-              <version>0.0.1</version>
-            </project>
+        	<project>
+				<artifactId>test</artifactId>
+            	<groupId>org.qooxdoo.test</groupId>
+            	<version>0.0.1</version>
+			</project>
         </configuration>
       </plugin>
     </plugins>

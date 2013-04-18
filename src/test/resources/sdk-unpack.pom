@@ -11,7 +11,7 @@
               			<version>0.0.1</version>
 					</project>
 					<namespace>test</namespace>
-					<sdkVersion>1.5</sdkVersion>
+					
 					<sdkParentDirectory>target/test-target</sdkParentDirectory>
 					<encoding>UTF-8</encoding>
 					
