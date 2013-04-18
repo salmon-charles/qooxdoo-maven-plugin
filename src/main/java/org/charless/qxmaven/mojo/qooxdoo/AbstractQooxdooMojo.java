@@ -1,9 +1,13 @@
 package org.charless.qxmaven.mojo.qooxdoo;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -23,6 +27,49 @@ public abstract class AbstractQooxdooMojo
 {
 	final static protected String QOOXDOO_SDK_DIRECTORY = "qooxdoo-sdk";
 	
+	/**
+     * Path to the qooxdoo application source directory, containing the application classes
+     *
+     * @parameter 	expression="${qooxdoo.application.sourcesDirectory}"
+     * 				default-value="${project.basedir}/src/main/qooxdoo"
+     * @required
+     */
+    protected File sourcesDirectory;
+    
+	/**
+     * Path to the qooxdoo application test directory, containing the application unit-test classes
+     *
+     * @parameter 	expression="${qooxdoo.application.testDirectory}"
+     * 				default-value="${project.basedir}/src/test/qooxdoo"
+     * @required
+     */
+    protected File testDirectory;
+    
+	/**
+     * Path to the qooxdoo application resources directory
+     *
+     * @parameter 	expression="${qooxdoo.application.resourcesDirectory}"
+     * 				default-value="${project.basedir}/src/main/resources/qooxdoo"
+     * @required
+     */
+    protected File resourcesDirectory;
+    
+    /**
+     * Path to the output cache directory where the cache informations will be stored
+     * @parameter   expression="${qooxdoo.application.cacheDirectory}"
+     * 				default-value="${project.build.directory}/qooxdoo/cache"
+     * @required
+     */
+    protected File cacheDirectory;
+    
+    /**
+     * Path to the directory containing translation files
+     * @parameter   expression="${qooxdoo.application.translationDirectory}"
+     * 				default-value="${project.basedir}/src/main/resources/qooxdoo/translation"
+     * @required
+     */
+    protected File translationDirectory;
+    
 	/**
      * The maven project.
      *
@@ -50,14 +97,6 @@ public abstract class AbstractQooxdooMojo
      * @required
      */
     protected File sdkParentDirectory;
-    
-    /**
-     * The qooxdoo sdk version
-     * @parameter   expression="${qooxdoo.sdk.version}"
-     * 				
-     * @required
-     */
-    protected String sdkVersion;
     
     /**
      * Path to the output directory where application will be builded
@@ -149,6 +188,15 @@ public abstract class AbstractQooxdooMojo
     	}
     	return this.configTarget;
     }
+    
+    public File getConfigDirectory() {
+    	File resourcesDir = new File(this.resourcesDirectory,this.namespace);
+    	return new File(resourcesDir,"config");
+    }
+    
+    public File getConfigJson() {
+    	return new File(getConfigDirectory(),this.config);
+    }
 
 	public String getNamespace() {
 		return namespace;
@@ -158,6 +206,36 @@ public abstract class AbstractQooxdooMojo
 		this.namespace = namespace;
 	}
     
+	public String getSdkVersion() {
+		Artifact qooxdooSdk = this.getQooxdooSdkArtifact();
+		if (qooxdooSdk == null) { return null; }
+		return qooxdooSdk.getVersion();
+	}
+	
+    /**
+     * Get the qooxdoo-sdk dependency
+     */
+    @SuppressWarnings("rawtypes")
+    public Artifact getQooxdooSdkArtifact() {
+        Set dependencies = project.getArtifacts();
+
+		if( dependencies.size() == 0 ) { return null;		}
+
+        ArtifactFilter runtime = new ScopeArtifactFilter( Artifact.SCOPE_COMPILE );
+        for ( Iterator iterator = dependencies.iterator(); iterator.hasNext(); )
+        {
+            Artifact dependency = (Artifact) iterator.next();
+            if ( 	!dependency.isOptional() 
+            		&& "jar".equals( dependency.getType() )
+            		&& "org.qooxdoo".equals(dependency.getGroupId())
+            		&& "qooxdoo-sdk".equals(dependency.getArtifactId())
+            		&& runtime.include( dependency ) )
+            {
+                return dependency;
+            }
+        }
+    	return null;
+    }
 
 //    /**
 //     * @component 

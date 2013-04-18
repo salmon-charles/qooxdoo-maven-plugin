@@ -33,10 +33,12 @@ public class TestrunnerMojo extends AbstractGeneratorMojo {
      */
     protected String testView;
 	
-    public void execute()
-        throws MojoExecutionException, MojoFailureException
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException
     {
-    	this.generator(testJob);
+    	this.setJobName(testJob);
+    	super.execute();
+    	
     	File index = this.getTestrunnerIndexHtml();
     	if (index.exists()) {
     		try {

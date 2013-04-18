@@ -9,10 +9,11 @@
         	<namespace>compile_app</namespace>
         	<encoding>UTF-8</encoding>
         	<sdkParentDirectory>target/test-compile</sdkParentDirectory>
-        	<sdkVersion>1.5</sdkVersion>
         	<config>config.json</config>
         	<useEmbeddedJython>true</useEmbeddedJython>
         	<buildJob>build</buildJob>
+        	<jythonCompiledDirectory>target/test-compile</jythonCompiledDirectory>
+        	<jythonTestCompiledDirectory>target/test-compile</jythonTestCompiledDirectory>
         	<project >
               <artifactId>test</artifactId>
               <groupId>org.qooxdoo.test</groupId>

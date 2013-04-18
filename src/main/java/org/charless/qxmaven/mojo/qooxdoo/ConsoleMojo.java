@@ -37,9 +37,10 @@ import com.google.common.collect.Sets;
  * @requiresDirectInvocation true
  */
 public class ConsoleMojo extends AbstractGeneratorMojo {
-	    
-    public void execute() throws MojoExecutionException, MojoFailureException {
-    	JythonShell shell = getJythonShell("",true);
+	
+	@Override
+    public void execute() throws MojoExecutionException {
+    	JythonShell shell = getJythonShell(true);
     	shell.exec("from qonsole import qxjavainit");
     	shell.exec("qxjavainit()");
     	shell.exec("from qonsole import *");

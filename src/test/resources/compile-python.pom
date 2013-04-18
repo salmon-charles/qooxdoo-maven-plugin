@@ -9,7 +9,6 @@
         	<namespace>compile_app</namespace>
         	<encoding>UTF-8</encoding>
         	<sdkParentDirectory>target/test-compile</sdkParentDirectory>
-        	<sdkVersion>1.5</sdkVersion>
         	<config>config.json</config>
         	<useEmbeddedJython>false</useEmbeddedJython>
         	<pythonInterpreter>python</pythonInterpreter>
