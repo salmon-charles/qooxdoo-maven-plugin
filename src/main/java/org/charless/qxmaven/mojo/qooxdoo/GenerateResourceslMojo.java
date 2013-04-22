@@ -17,17 +17,17 @@ import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
- * Generate the html files into the output directory
+ * The qooxdoo builder is responsible for copying resources in the right location
  * 
- * To generate the files, it filters and copy resources located into:
- *   ${resourcesDirectory}/html
- *   
- * @goal generate-html
- * @phase process-resources
+ * This goal copy the files located into the "root" folder of the resources
+ * into the target application directory
+ * 
+ * @goal generate-resources
+ * @phase generate-resources
  * @author charless
  *
  */
-public class GenerateHtmlMojo extends AbstractResourcesMojo {
+public class GenerateResourceslMojo extends AbstractResourcesMojo {
     
     
     /**
@@ -38,16 +38,22 @@ public class GenerateHtmlMojo extends AbstractResourcesMojo {
     protected List<Resource> getResources() throws MojoExecutionException {
     	List<Resource> resources = new ArrayList<Resource>();
     	File resourcesDir = new File(this.resourcesDirectory,this.namespace);
-    	// HTML
-    	File configDir = new File(resourcesDir,"html");
-    	if (! configDir.isDirectory()) {
-    		throw new MojoExecutionException("Qooxdoo configuration directory \'"+configDir.getAbsolutePath()+"\' does not exists or is not a directory !");
+    	
+    	// ROOT
+    	File configDir = new File(resourcesDir,"root");
+    	if (configDir.isDirectory()) {
+    		Resource config = new Resource();
+        	config.setFiltering(true);
+        	config.setDirectory(configDir.getAbsolutePath());
+        	resources.add(config);
     	}
-    	Resource config = new Resource();
-    	config.setFiltering(true);
-    	config.setDirectory(configDir.getAbsolutePath());
-    	resources.add(config);
+    	
     	return resources;
+    }
+    
+    @Override
+    protected File getResourcesTarget() {
+    	return this.getApplicationTarget();
     }
     
 }

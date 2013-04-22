@@ -2,6 +2,8 @@ package org.charless.qxmaven.mojo.qooxdoo.app;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -34,6 +36,7 @@ public class Application {
     
     private Config config;
     private Manifest manifest;
+    private File pyGenerate;
     private File srcSourceDir;
     private File srcResourceDir;
     private File srcClassDir;
@@ -137,9 +140,21 @@ public class Application {
     	FileUtils.copyDirectory(this.srcResourceDir, this.getMvnResourcesDirectory());
     	File targetResources =  new File(this.getMvnResourcesDirectory(),namespaceDir);
     	checkFileExists("resources directory",targetResources);
-    	// HTML
-    	File targetResourcesHtml =  new File(targetResources,"html");
-    	FileUtils.copyFileToDirectory(new File(this.srcSourceDir,"index.html"), targetResourcesHtml);
+    	// ROOT (resources)
+    	File targetResourcesRoot =  new File(targetResources,"root");
+    	FileUtils.copyFileToDirectory(new File(this.srcSourceDir,"index.html"), new File(targetResourcesRoot,"source"));
+    	FileUtils.copyFileToDirectory(new File(this.srcSourceDir,"index.html"), new File(targetResourcesRoot,"build"));
+    	try {
+        	InputStream IS = Application.class.getResourceAsStream("/index.html");
+        	FileOutputStream OS = new FileOutputStream(new File(targetResourcesRoot,"index.html"));
+        	byte[] buffer = new byte[2048];
+        	int nRead = 0;
+        	while((nRead = IS.read(buffer)) != -1) {
+        		OS.write(buffer,0,nRead);
+            }
+        	IS.close();
+    	} catch (Exception e) {System.out.println(e);}
+    	FileUtils.copyFileToDirectory(this.pyGenerate,targetResourcesRoot);
     	// Config
     	File targetConfig =  new File(targetResources,"config");
     	targetConfig.mkdirs();
@@ -160,7 +175,7 @@ public class Application {
     	this.manifest.providesPut("namespace", "${qooxdoo.application.namespace}");
     	this.manifest.providesPut("encoding", "${qooxdoo.build.sourceEncoding}");
     	this.manifest.providesPut("class", "${qooxdoo.application.sourcesDirectory}");
-    	this.manifest.providesPut("resource", "${qooxdoo.application.resourcesDirectory}/${qooxdoo.application.namespace}");
+    	this.manifest.providesPut("resource", "${qooxdoo.application.resourcesDirectory}");
     	this.manifest.providesPut("translation", "${qooxdoo.application.translationDirectory}");
     	this.manifest.write( new File(targetConfig,this.getManifestFileName()));
     	// manifest for unit tests
@@ -198,7 +213,8 @@ public class Application {
     	checkFileExists("applicationDirectory",this.getApplicationDirectory());
     	this.config = Config.read(checkFileExists("qooxdoo application configuration file",new File(this.getApplicationDirectory(), this.getConfigFileName())));
 		this.manifest = Manifest.read(checkFileExists("qooxdoo application manifest file",new File(this.getApplicationDirectory(), this.getManifestFileName())));
-    	this.srcSourceDir = checkFileExists("qooxdoo application source directory",new File(this.getApplicationDirectory(),"source"));
+		this.pyGenerate = checkFileExists("qooxdoo pythion generator",new File(this.getApplicationDirectory(), "generate.py"));
+		this.srcSourceDir = checkFileExists("qooxdoo application source directory",new File(this.getApplicationDirectory(),"source"));
 		this.srcResourceDir = checkFileExists("qooxdoo application resource directory",new File(this.srcSourceDir,"resource"));
     	this.srcClassDir = checkFileExists("qooxdoo application class directory",new File(this.srcSourceDir,"class"));
     	this.srcTranslationDir = checkFileExists("qooxdoo application translation directory",new File(this.srcSourceDir,"translation"));

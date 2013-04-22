@@ -13,9 +13,6 @@
         </execute>
       </action>
     </pluginExecution>
-  </pluginExecutions>
-  
-  <pluginExecutions>
     <pluginExecution>
       <pluginExecutionFilter>
         <goals>
@@ -26,9 +23,6 @@
         <ignore />
       </action>
     </pluginExecution>
-  </pluginExecutions>
-  
-  <pluginExecutions>
     <pluginExecution>
       <pluginExecutionFilter>
         <goals>
@@ -39,9 +33,6 @@
         <ignore />
       </action>
     </pluginExecution>
-  </pluginExecutions>
-  
-  <pluginExecutions>
     <pluginExecution>
       <pluginExecutionFilter>
         <goals>

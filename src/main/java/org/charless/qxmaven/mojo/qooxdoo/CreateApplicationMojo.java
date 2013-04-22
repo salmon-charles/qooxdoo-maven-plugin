@@ -36,14 +36,16 @@ public class CreateApplicationMojo extends AbstractPythonMojo {
      * Path where the qooxdoo application will be created, right after the create-application.py call
      * Please note this is not the final application directory
      * 
-     * @readonly
+     * @parameter   expression="${qooxdoo.application.tmpDirectory}"
+     * 				default-value="${project.build.directory}/qooxdoo/tmp"
+     * @required
      */
-    private File tmpApplicationTarget;
+    private File tmpDirectory;
 	
 	@Override
     public void execute() throws MojoExecutionException {
 		// Check
-		this.outputDirectory.mkdirs();
+		this.tmpDirectory.mkdirs();
 		try {
 			FileUtils.deleteDirectory(this.getTmpApplicationTarget());
 		} catch (Exception e) {
@@ -63,7 +65,7 @@ public class CreateApplicationMojo extends AbstractPythonMojo {
 		} catch (Exception e) {
 			throw new MojoExecutionException(e.getMessage());
 		}
-		File appdir = new File(this.outputDirectory.getAbsolutePath(),namespace);
+		File appdir = getTmpApplicationTarget();
 		if (! (appdir.exists()&&appdir.canRead()&&appdir.isDirectory()) ) {
 			throw new MojoExecutionException("Looks like the application has not been created into "+appdir.getAbsolutePath());
 		}
@@ -84,11 +86,11 @@ public class CreateApplicationMojo extends AbstractPythonMojo {
     }
 	
 	 protected String[] getCommandLineOptions() {
-	    return new String[]{"-n",namespace,"-t",type,"-o",this.outputDirectory.getAbsolutePath()};
+	    return new String[]{"-n",namespace,"-t",type,"-o",this.getTmpApplicationTarget().getParentFile().getAbsolutePath()};
 	 }
 	 
 	 private File getTmpApplicationTarget() {
-		 return new File(this.outputDirectory,this.namespace);
+		 return new File(this.tmpDirectory,this.namespace);
 	 }
 	 
 }

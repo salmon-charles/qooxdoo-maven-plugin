@@ -22,14 +22,6 @@ import org.apache.maven.plugin.MojoFailureException;
  */
 public class CompileMojo extends AbstractGeneratorMojo {
 	
-    /**
-     * Name of the job used to build the application.
-     *
-     * @parameter expression="${qooxdoo.build.job}"
-     * 			  default-value="build"
-     */
-    protected String buildJob;
-	
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException
     {

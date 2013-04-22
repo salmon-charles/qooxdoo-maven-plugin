@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>${qooxdoo.application.name}</title>
+</head>
+<body>
+
+<h1>Welcome to Qooxdoo-Maven !</h1>
+
+<p>Qooxdoo-Maven aims to simplify the development of Qooxdoo applications by using Java technologies.</p>
+
+<h2>Builds</h2>
+
+<b>Important: if the link points to an empty page, make sure you have builded the application/component by using the appropriate maven command !</b>
+
+<h3>Production</h3>
+<ul>
+	<li>
+		Launch <pre>mvn compile</pre> to build the <a href="build/index.html">production version of your application</a> 
+	</li>
+	<li>
+		Launch <pre>mvn qooxdoo:testrunner</pre> to build the <a href="test/index.html">testrunner application (unit tests)</a> 
+	</li>
+</ul>
+
+<h3>Development</h3>
+<ul>
+	<li>
+		Launch <pre>mvn -Dbuild.type=dev compile</pre> to build the <a href="source/index.html">development version of your application</a>
+	</li>
+	<li>
+		Launch <pre>mvn -Dbuild.type=dev qooxdoo:testrunner</pre> to build the <a href="test/index-source.html">testrunner application (unit tests)</a> 
+	</li>
+</ul>
+
+<h2>Configuration</h2>
+
+<ul>
+	<li>Application namespace   : ${qooxdoo.application.namespace}</li>
+    <li>Path to application class dir       : ${qooxdoo.application.sourcesDirectory}</li>
+    <li>Path to application resource dir    : ${qooxdoo.application.resourcesDirectory}/${qooxdoo.application.namespace}</li>
+    <li>Path to application translation dir" : ${qooxdoo.application.translationDirectory}</li>
+	<li>Qooxdoo path : ${qooxdoo.sdk.parentDirectory}/qooxdoo-sdk</li>
+	<li>Qooxdoo Theme      : ${APPLICATION}.theme.Theme</li>
+	<li>Qooxdoo root         : ${qooxdoo.application.outputDirectory}/${qooxdoo.application.namespace}</li>
+</ul>
+
+<p>Have a look to <a href="config.json">config.json</a> and <a href="Manifest.json">Manifest.json</a> for a details view of the configuration.
+</p>
+
+<b>To change permanently the application configuration, you must change the files located into the source directory 
+(<pre>${qooxdoo.application.resourcesDirectory}/${qooxdoo.application.namespace}/config</pre>) </b> 
+
+
+</body>
+</html>

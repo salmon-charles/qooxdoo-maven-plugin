@@ -14,12 +14,12 @@ import org.charless.qxmaven.mojo.qooxdoo.app.Config;
 
 /**
  * Goal which (re)builds the translation files
+ * Note that goal is not attached to a specific lifecycle phase
+ * Just type mvn qooxdoo:translation to update the files
  * 
  * @goal translation
- * @phase generate-resources
  * @author charless
  */
-// FIXME: Which phase for translation ? Do we need to tie it to a phase ?
 public class TranslationMojo extends AbstractGeneratorMojo {
 	
     public void execute() throws MojoExecutionException, MojoFailureException

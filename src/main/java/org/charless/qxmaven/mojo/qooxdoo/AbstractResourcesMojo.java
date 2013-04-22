@@ -71,7 +71,7 @@ public abstract class AbstractResourcesMojo extends AbstractQooxdooMojo {
 			}
 			
 			final MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution(
-					this.getResources(), this.getApplicationTarget(), this.project,
+					this.getResources(), this.getResourcesTarget(), this.project,
 					this.encoding, null, Collections.EMPTY_LIST,
 					this.session);
 
@@ -109,6 +109,15 @@ public abstract class AbstractResourcesMojo extends AbstractQooxdooMojo {
      */
     protected List<Resource> getResources() throws MojoExecutionException {
     	return new ArrayList<Resource>();
+    }
+    
+    /**
+     * Directory where resources will be copied
+     * You ay mneed to override these method in the parent class to fit with your needs
+     * @return The directory where to store resources
+     */
+    protected File getResourcesTarget() {
+    	return this.getApplicationTarget();
     }
     
     /**

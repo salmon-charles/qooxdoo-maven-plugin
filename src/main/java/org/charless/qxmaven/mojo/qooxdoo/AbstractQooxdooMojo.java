@@ -151,6 +151,14 @@ public abstract class AbstractQooxdooMojo
     private File configTarget;
     
     /**
+     * Name of the job used to build the application.
+     *
+     * @parameter expression="${qooxdoo.build.job}"
+     * 			  default-value="build"
+     */
+    protected String buildJob;
+    
+    /**
      * Get the path to the sdk directory, containing the qooxdoo sdk
      * @return Path to the (unpacked) qooxdoo sdk
      */
