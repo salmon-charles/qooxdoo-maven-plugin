@@ -33,8 +33,13 @@ public class CreateApplicationMojo extends AbstractPythonMojo {
 	private String type;
 	
 	/**
+	 * EXPERIMENTAL !
+	 * 
 	 * A directory containing an existing non-mavenized Qooxdoo application.
 	 * Useful if you want to "mavenize" an existing application.
+	 * 
+	 * Make sure the qooxdoo.application.namespace is set to the imported application namespace
+	 * It's up to you to check that the imported application is compatible with the qooxdooSdk version
 	 * 
 	 * Note: in that case the type attribute is useless
 	 * @parameter   expression="${fromDirectory}"

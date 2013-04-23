@@ -169,7 +169,7 @@ public class Application {
 				"{\"library\" : [ {\"manifest\" : \"./"+unitTestManifestFilename+"\"} ]}",Map.class));
     	this.config.write( new File(targetConfig,this.getConfigFileName()));
     	// manifest.json
-    	this.manifest.infoPut("name", "${qooxdoo.application.name}");
+    	this.manifest.infoPut("name", "${qooxdoo.application.namespace}");
     	this.manifest.infoPut("version", "${project.version}");
     	this.manifest.infoPut("qooxdoo-versions",Json.getMapper().readValue( "[\"${qooxdoo.sdk.version}\"]",ArrayList.class));
     	this.manifest.providesPut("namespace", "${qooxdoo.application.namespace}");
@@ -180,7 +180,7 @@ public class Application {
     	this.manifest.write( new File(targetConfig,this.getManifestFileName()));
     	// manifest for unit tests
     	Manifest unitTestManifest = this.manifest.copy();
-    	unitTestManifest.infoPut("name", "${qooxdoo.application.name}_test");
+    	unitTestManifest.infoPut("name", "${qooxdoo.application.namespace}_test");
     	unitTestManifest.infoPut("summary","Unit tests for ${qooxdoo.application.summary");
     	unitTestManifest.infoPut("description", "Group unit tests classes in a separated directory than the application one");
     	unitTestManifest.providesPut("namespace", "${qooxdoo.application.namespace}.test");
