@@ -5,7 +5,7 @@
 	<name>qooxdoo-maven-plugin Maven Mojo</name>
 	<description>Qooxdoo Maven Plugin</description>
 	<url>http://salmon-charles.github.io/qooxdoo-maven-plugin/</url>
-	<version>2.1.1-SNAPSHOT</version>
+	<version>2.1.1</version>
 
 	<parent>
 		<groupId>org.qooxdoo</groupId>
