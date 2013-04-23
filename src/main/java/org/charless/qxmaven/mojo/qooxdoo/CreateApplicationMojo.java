@@ -32,6 +32,16 @@ public class CreateApplicationMojo extends AbstractPythonMojo {
 	 */
 	private String type;
 	
+	/**
+	 * A directory containing an existing non-mavenized Qooxdoo application.
+	 * Useful if you want to "mavenize" an existing application.
+	 * 
+	 * Note: in that case the type attribute is useless
+	 * @parameter   expression="${fromDirectory}"
+	 * 
+	 */
+	private File fromDirectory;
+	
     /**
      * Path where the qooxdoo application will be created, right after the create-application.py call
      * Please note this is not the final application directory
@@ -58,16 +68,24 @@ public class CreateApplicationMojo extends AbstractPythonMojo {
 		}
 			
 		// Create app
-		getLog().info("Creating a '"+type+"' application named '"+namespace+"'...");
-		try {
-			if (useEmbeddedJython) 	{ jython(); } 
-			else 					{ python(); }
-		} catch (Exception e) {
-			throw new MojoExecutionException(e.getMessage());
-		}
-		File appdir = getTmpApplicationTarget();
-		if (! (appdir.exists()&&appdir.canRead()&&appdir.isDirectory()) ) {
-			throw new MojoExecutionException("Looks like the application has not been created into "+appdir.getAbsolutePath());
+		File appdir = null;
+		if (this.fromDirectory == null) {
+			getLog().info("Creating a '"+type+"' application named '"+namespace+"'...");
+			try {
+				if (useEmbeddedJython) 	{ jython(); } 
+				else 					{ python(); }
+			} catch (Exception e) {
+				throw new MojoExecutionException(e.getMessage());
+			}
+			appdir = getTmpApplicationTarget();
+			if (! (appdir.exists()&&appdir.canRead()&&appdir.isDirectory()) ) {
+				throw new MojoExecutionException("Looks like the application has not been created into "+appdir.getAbsolutePath());
+			}
+		} else {
+			appdir = this.fromDirectory;
+			if (! (appdir.exists()&&appdir.canRead()&&appdir.isDirectory()) ) {
+				throw new MojoExecutionException("Looks like the application directory specified by the fromDirectory parameter is not an existing directory "+appdir.getAbsolutePath());
+			}
 		}
 		// Migrate to a maven structure
 		getLog().info("Mavenizing '"+appdir.getAbsolutePath()+"' ...");
